@@ -1,0 +1,116 @@
+:root {
+    --vino: #7a1b4d;
+    --gris: #475569;
+    --bg: #f4f7f6;
+}
+
+body { font-family: sans-serif; margin: 0; background: #2d1a2d; }
+.hidden { display: none !important; }
+
+/* LOGIN CORREGIDO */
+.login-container { display: flex; justify-content: center; align-items: center; height: 100vh; }
+.login-box { background: white; padding: 30px; border-radius: 15px; text-align: center; width: 320px; }
+.login-box input { 
+    width: 90%; 
+    padding: 10px; 
+    margin: 15px 0; 
+    border: 1px solid #ccc; 
+    border-radius: 5px;
+}
+.btn-ingreso { 
+    width: 100%; padding: 12px; background: var(--vino); color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold;
+}
+
+/* PANEL ADMIN COMPACTO */
+.admin-panel { max-width: 600px; margin: 20px auto; background: white; border-radius: 10px; padding: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
+
+.panel-header { text-align: center; border-bottom: 2px solid var(--vino); padding-bottom: 10px; margin-bottom: 15px; }
+.logo-admin { width: 140px; }
+.slogan { font-size: 11px; color: var(--vino); margin: 5px 0; }
+.panel-header h1 { font-size: 18px; color: var(--vino); margin: 5px 0; }
+.panel-header h3 { font-size: 14px; margin: 2px 0; color: var(--vino); }
+.info-text { font-size: 11px; margin: 2px 0; }
+.highlight-text { font-size: 12px; font-weight: bold; color: #1e293b; margin-top: 5px; }
+
+.btn-logout { background: var(--gris); color: white; border: none; padding: 5px 12px; border-radius: 4px; font-size: 12px; cursor: pointer; margin-top: 10px; }
+
+/* GRID DE CLIENTE */
+.client-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 15px; }
+.field { display: flex; flex-direction: column; }
+.field.full-width { grid-column: span 2; }
+.field label { font-size: 11px; font-weight: bold; color: var(--vino); }
+.field input { border: none; border-bottom: 1px solid #ccc; padding: 5px; font-size: 13px; }
+.input-important { color: #d90429; font-weight: bold; font-size: 16px !important; }
+
+/* TABLA */
+table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 12px; }
+th { background: var(--vino); color: white; padding: 8px; }
+td { border: 1px solid #eee; padding: 5px; }
+td input { width: 95%; border: 1px solid #ddd; padding: 4px; }
+
+.btn-add { margin-top: 10px; background: var(--gris); color: white; border: none; padding: 8px; border-radius: 5px; cursor: pointer; width: 100%; font-size: 12px; }
+
+/* RESUMEN */
+.resumen-container { border: 2px solid var(--vino); border-radius: 8px; margin: 15px 0; padding: 10px; display: flex; justify-content: space-around; text-align: center; }
+.resumen-item label { display: block; font-size: 11px; font-weight: bold; color: var(--vino); }
+.resumen-item input { width: 80px; text-align: center; border: 1px solid #ccc; }
+.resumen-item span { font-size: 18px; font-weight: bold; color: var(--vino); }
+
+/* SECCIÓN IMPRESIÓN */
+.print-section { margin-top: 20px; }
+.btn-print { 
+    width: 100%; 
+    padding: 18px; 
+    background: var(--vino); 
+    color: white; 
+    border: none; 
+    border-radius: 10px; 
+    font-size: 16px; 
+    font-weight: bold; 
+    cursor: pointer; 
+}
+
+/* CONFIGURACIÓN PARA MEDIA CARTA */
+@media print {
+    @page {
+        size: 5.5in 8.5in;
+        margin: 0.5cm;
+    }
+    body { background: white !important; }
+    .no-print, .login-container { display: none !important; }
+    .admin-panel { 
+        max-width: 100% !important; 
+        margin: 0 !important; 
+        padding: 0 !important; 
+        box-shadow: none !important; 
+    }
+    input { border: none !important; background: transparent !important; }
+    .input-important { font-size: 20px !important; }
+    .resumen-container { border: 1px solid var(--vino) !important; }
+}
+
+@media print {
+    /* ... tus otras reglas ... */
+
+    @page {
+        size: 5.5in 8.5in;
+        margin: 0.5cm;
+    }
+
+    /* Esta regla elimina elementos extraños que el navegador pueda insertar */
+    * {
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+    }
+
+    /* Oculta cualquier caja negra o etiqueta de medición */
+    div[class*="measure"], 
+    div[id*="measure"],
+    .no-print {
+        display: none !important;
+    }
+
+    body { background: white !important; }
+    .admin-panel { border: none !important; box-shadow: none !important; }
+}
+

@@ -1,0 +1,761 @@
+:root {
+    --primary: #00a8cc;
+    --dark: #0f172a;
+    --light: #f8fafc;
+    --accent: #25d366;
+    --yellow: #f1c40f;
+    --text: #1e293b;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: "Inter", "Roboto", sans-serif;
+    color: var(--text);
+    background: var(--light);
+    overflow-x: hidden;
+    line-height: 1.6;
+}
+
+.container {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 20px;
+   
+}
+
+.section {
+    padding: 60px 0;
+}
+
+.bg-alt {
+    background: #f1f5f9;
+    
+}
+.bg-alt button{
+    text-align: center;
+}
+
+.section-title {
+    text-align: center;
+    margin-bottom: 40px;
+    font-weight: 800;
+    font-size: 1.6rem;
+    
+}
+
+/* Estilo unificado para el texto de invitación */
+.visitanos {
+    color: #475569;
+    padding: 10px;
+    text-align: center;
+    font-size: 1.1rem;
+    max-width: 800px;
+    margin: 0 auto 20px;
+}
+
+#visitanos {
+    font-size: 1.3rem;
+    padding: 2px;
+}
+
+.container h2 {
+    text-align: center;
+}
+
+/* --- COMPONENTES REUTILIZABLES --- */
+.btn {
+    padding: 12px 25px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 700;
+    transition: 0.3s;
+    display: inline-block;
+    border: none;
+    cursor: pointer;
+}
+
+.btn-ws {
+    background-color: var(--accent);
+    color: white;
+}
+.btn-ws:hover {
+    background-color: #1eb956;
+    transform: translateY(-2px);
+}
+
+.btn-light {
+    background: white;
+    color: var(--dark);
+}
+.btn-light:hover {
+    background: #e2e8f0;
+}
+
+.ws-float {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 60px;
+    height: 60px;
+    background: var(--accent);
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+    z-index: 5000;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    transition: 0.3s;
+}
+
+.ws-float:hover {
+    transform: scale(1.1);
+}
+
+/* --- NAVEGACIÓN Y PROMO --- */
+.promo-bar {
+    background: var(--yellow);
+    text-align: center;
+    padding: 10px;
+    font-weight: 700;
+    position: sticky;
+    top: 0;
+    z-index: 6000;
+    font-size: 0.9rem;
+    
+    
+}
+.promo-bar span {
+    color:red;
+    font-weight: bold;
+}
+
+#header {
+    position: absolute;
+    width: 100%;
+    top: 40px; /* Ajustado por la promo-bar */
+    left: 0;
+    z-index: 4000;
+    padding: 20px 0;
+    transition: 0.3s;
+}
+
+#header.scrolled {
+    position: fixed;
+    top: 60px;
+    background: white;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    padding: 10px 0;
+}
+
+.nav-flex {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    margin-top: 20px;
+}
+
+.logo {
+    font-weight: 800;
+    font-size: 1.5rem;
+    color: white;
+    letter-spacing: .5rem;
+    text-decoration: none;
+}
+
+#header.scrolled .logo {
+    color: var(--dark);
+}
+
+.nav-menu ul {
+    display: flex;
+    list-style: none;
+    gap: 25px;
+    
+}
+
+.nav-menu a {
+    color: white;
+    text-decoration: none;
+    font-weight: 600;
+    transition: 0.3s;
+}
+
+.nav-menu a:hover {
+    color: var(--accent);
+}
+
+#header.scrolled .nav-menu a {
+    color: var(--dark);
+}
+#header.scrolled .nav-menu a:hover {
+    color: var(--primary);
+}
+
+.hamburger {
+    display: none;
+    flex-direction: column;
+    gap: 5px;
+    cursor: pointer;
+    background: none;
+    border: none;
+}
+
+.hamburger span {
+    width: 28px;
+    height: 3px;
+    background: white;
+    border-radius: 2px;
+    transition: 0.3s;
+}
+
+#header.scrolled .hamburger span {
+    background: var(--dark);
+}
+
+.btn-resena {
+    background: #4285F4; /* Azul Google */
+    color: white !important;
+    padding: 8px 15px;
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: 0.3s;
+}
+
+.btn-resena:hover {
+    background: #357ae8;
+    transform: scale(1.05);
+}
+
+/* --- HERO --- */
+.hero {
+    height: 90vh;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    color: white;
+}
+
+.parallax-bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background:
+        linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)),
+        url("https://images.unsplash.com/photo-1550537687-c91072c4792d?auto=format&fit=crop&w=1200&q=80")
+            center/cover;
+    z-index: -1;
+}
+
+.hero h1 {
+    font-size: 1.5rem;
+    margin-bottom: 20px;
+    line-height: 1.3;
+   
+    width: 100%
+  
+  
+    
+}
+
+.hero h1 span {
+    color: var(--accent);
+    letter-spacing: .5rem;
+     text-transform: uppercase;
+     font-weight: 400;
+    
+
+}
+
+.badge {
+    background: var(--primary);
+    padding: 8px 15px;
+    border-radius: 50px;
+    font-size: 0.85rem;
+    display: inline-block;
+    margin-bottom: 15px;
+}
+
+.cta-group a{
+    
+    margin: 20px 10px 0;   
+}
+
+/* --- SERVICIOS --- */
+.services-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 10px;
+}
+
+
+
+
+
+.service-card {
+    background: white;
+    padding: 30px;
+    border-radius: 15px;
+    text-align: center;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    transition: 0.3s;
+   
+}
+
+.service-card:hover {
+    transform: translateY(-5px);
+}
+
+.service-card i {
+    font-size: 2.5rem;
+    color: var(--primary);
+    margin-bottom: 15px;
+}
+.resultados-reales{
+    margin-top: 40px;
+}
+/* --- COMPARATIVA ANTES/DESPUÉS --- */
+.section-header p {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.comparison-grid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 30px;
+}
+
+.compare-card {
+    text-align: center;
+}
+
+.compare-imgs {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.img-box1 img,
+.img-box img {
+    width: 180px;
+    height: 180px;
+    object-fit: cover;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.lbl1,
+.after {
+    display: block;
+    font-weight: 700;
+    font-size: 0.9rem;
+    margin-top: 5px;
+    color: var(--dark);
+}
+
+/* --- FAQ --- */
+.faq-container {
+    max-width: 700px;
+    margin: 0 auto;
+   
+}
+
+.faq-item {
+    border-bottom: 1px solid #e2e8f0;
+    margin-bottom: 10px;
+     user-select: none;
+}
+
+.faq-question {
+    
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background 0.3s;
+    position: relative; /* Necesario para ubicar el ícono */
+    
+}
+
+/* Dibujamos el signo MÁS (+) por defecto */
+.faq-question::after {
+    content: '\2b'; /* Código Unicode para el signo + */
+    font-family: "Font Awesome 6 Free";
+    font-weight: 900;
+    font-size: 1.1rem;
+    color: var(--primary);
+    transition: transform 0.3s ease;
+}
+
+/* Cambiamos a signo MENOS (-) cuando está activo */
+.faq-item.active .faq-question::after {
+    content: '\f068'; /* Código FontAwesome para el signo - */
+    color: var(--dark);
+}
+
+.faq-question:hover {
+    background-color: #f8fafc;
+}
+
+.faq-answer {
+    
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease-out, padding 0.3s ease;
+    padding: 0 15px;
+    
+    
+    
+}
+
+.faq-item.active .faq-answer {
+    max-height: 200px; /* Ajusta según el largo de tus respuestas */
+    padding-bottom: 15px;
+     user-select: none;
+}
+
+.faq-item.active .faq-question i {
+    transform: rotate(360deg); /* Opcional: un pequeño giro */
+     user-select: none;
+}
+.faq-item {
+    border-bottom: 1px solid #e2e8f0;
+    margin-bottom: 10px;
+     user-select: none;
+}
+
+.faq-question {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background 0.3s;
+     user-select: none;
+}
+
+.faq-question:hover {
+    background-color: #f8fafc;
+}
+
+.faq-answer {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease-out;
+    padding: 0 15px;
+     user-select: none;
+}
+
+.faq-item.active .faq-answer {
+    max-height: 200px; /* Ajusta según el largo de tus respuestas */
+    padding-bottom: 15px;
+}
+
+.faq-item.active .faq-question i {
+    transform: rotate(360deg); /* Opcional: un pequeño giro */
+}
+
+/* --- MAPA --- */
+.map-grid {
+    display: grid;
+    grid-template-columns: 1.5fr 1fr;
+    gap: 25px;
+}
+
+.schedule-box {
+    background: white;
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+}
+.festivos{
+    color: #d9534f; 
+    font-weight: bold
+}
+.table-input-container {
+    margin: 20px 0;
+    overflow-x: auto;
+}
+
+/* --- FOOTER --- */
+.footer {
+    background: #020617;
+    color: white;
+    padding: 20px 0 10px;
+}
+
+.footer-content {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 5px;
+    text-align: center;
+}
+
+.footer-brand h3 {
+    color: var(--accent);
+    margin-bottom: 15px;
+    letter-spacing: 1rem;
+}
+.social-btns {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin: 10px 0;
+}
+
+.social-btns a {
+    width: 45px;
+    height: 45px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    text-decoration: none;
+    font-size: 1.2rem;
+    transition: 0.3s;
+}
+
+.social-btns a:hover {
+    background: var(--primary);
+    transform: translateY(-3px);
+}
+
+.footer-bottom {
+    text-align: center;
+    margin-top: 15px;
+    padding-top: 10px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    font-size: 0.85rem;
+}
+
+.acceso-administrativo{
+    color: #ccc; 
+    text-decoration: none;
+        font-size: 0.9rem;
+}
+
+/* --- MEDIA QUERIES --- */
+@media (max-width: 768px) {
+    .hamburger {
+        display: flex;
+    }
+
+    .nav-menu {
+        position: fixed;
+        top: 0;
+        right: -100%;
+        width: 80%;
+        height: 100vh;
+        background: var(--dark);
+        padding: 100px 40px;
+        transition: 0.4s;
+        z-index: 5500;
+    }
+
+    .nav-menu.active {
+        right: 0;
+    }
+    .nav-menu ul {
+        flex-direction: column;
+        gap: 20px;
+    }
+    .nav-menu a {
+        font-size: 1.2rem;
+        color: white !important;
+    }
+
+    .hero h1 {
+        font-size: 2rem;
+    }
+    .map-grid {
+        grid-template-columns: 1fr;
+    }
+    .compare-imgs {
+        justify-content: center;
+    }
+    .img-box1 img,
+    .img-box img {
+        width: 140px;
+        height: 140px;
+    }
+
+    .footer {
+        padding-bottom: 100px;
+       
+    }
+}
+
+/* Animación Hamburguesa */
+.hamburger.active span:nth-child(1) {
+    transform: translateY(8px) rotate(45deg);
+    background: white !important;
+}
+.hamburger.active span:nth-child(2) {
+    opacity: 0;
+}
+.hamburger.active span:nth-child(3) {
+    transform: translateY(-8px) rotate(-45deg);
+    background: white !important;
+}
+
+/* --- WIDGET DE TIEMPOS DE ENTREGA --- */
+.tiempos-entrega {
+    background: white;
+    border-left: 5px solid var(--primary);
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    margin-top: 30px;
+    text-align: center;
+}
+
+.tiempos-entrega h4 {
+    color: var(--dark);
+    font-size: 1.3rem;
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+.tiempos-entrega h4 i {
+    color: var(--primary);
+}
+
+.tiempos-entrega ul {
+    display: block;
+    list-style: none;
+    text-align: center;
+    padding: 40px;
+}
+
+.tiempos-entrega li {
+    padding: 10px 0;
+    border-bottom: 1px dashed #e2e8f0;
+    display: flex;
+    justify-content: space-around;
+    font-size: 1rem;
+}
+
+.tiempos-entrega li:last-child {
+    border-bottom: none;
+}
+
+.tiempos-entrega li strong {
+    color: var(--primary);
+}
+
+.tiempos-entrega p {
+    margin-top: 15px;
+    font-style: italic;
+    color: #64748b;
+    font-size: 0.85rem;
+}
+
+/* Ocultar elementos */
+.hidden {
+    display: none !important;
+    
+}
+
+/* Caja de Login */
+.login-box {
+    max-width: 400px;
+    margin: 50px auto;
+    background: white;
+    padding: 30px;
+    border-radius: 12px;
+    text-align: center;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    
+}
+
+.login-form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-top: 20px;
+   justify-content: center;
+   align-items: center;
+   
+}
+
+.login-form input {
+    padding: 12px;
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    text-align: center;
+    font-size: 1.1rem;
+}
+
+.error-msg {
+    color: #e11d48;
+    font-size: 0.85rem;
+    margin-top: 10px;
+    font-weight: bold;
+}
+
+/* Ajuste para que se vea bien en móviles */
+@media (max-width: 768px) {
+    .tiempos-entrega {
+        padding: 15px;
+        text-align: center;
+    }
+    .tiempos-entrega li {
+        flex-direction: column;
+        gap: 5px;
+    }
+    .tiempos-entrega h4 {
+        display: block;
+        text-align: center;
+    }
+
+    
+}
+
+/* --- AJUSTE PANEL ADMINISTRATIVO EN MÓVIL --- */
+@media (max-width: 768px) {
+    .admin-btn-footer {
+        display: block; /* Ocupa todo el ancho disponible */
+        width: 90%;
+        margin: 20px auto 0; /* Centrado y con espacio arriba */
+        padding: 15px; /* Más grande para facilitar el clic */
+        font-size: 1rem;
+        background-color: rgba(255, 255, 255, 0.05);
+        border: 1px solid #475569;
+        text-align: center;
+    }
+
+    /* Asegura que el footer tenga espacio suficiente al final 
+       para que el botón de WhatsApp no tape el link administrativo */
+    .footer {
+        padding-bottom: 140px; 
+    }
+}
+
+
