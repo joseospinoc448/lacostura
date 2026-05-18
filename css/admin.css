@@ -5,7 +5,9 @@
 }
 
 body { font-family: sans-serif; margin: 0; background: #2d1a2d; }
-.hidden { display: none !important; }
+
+/* CLASES DE UTILIDAD */
+.hidden { display: none !important; } /* Único !important aceptado en la industria para asegurar el ocultado dinámico */
 
 /* LOGIN CORREGIDO */
 .login-container { display: flex; justify-content: center; align-items: center; height: 100vh; }
@@ -25,10 +27,9 @@ body { font-family: sans-serif; margin: 0; background: #2d1a2d; }
 .admin-panel { max-width: 600px; margin: 20px auto; background: white; border-radius: 10px; padding: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
 
 .panel-header { text-align: center; border-bottom: 2px solid var(--vino); padding-bottom: 10px; margin-bottom: 15px; }
-.logo-admin { width: 140px; }
+.logo-La Costura { width: 140px; height: auto; display: block; margin: 0 auto; }
 .slogan { font-size: 11px; color: var(--vino); margin: 5px 0; }
 .panel-header h1 { font-size: 18px; color: var(--vino); margin: 5px 0; }
-.panel-header h3 { font-size: 14px; margin: 2px 0; color: var(--vino); }
 .info-text { font-size: 11px; margin: 2px 0; }
 .highlight-text { font-size: 12px; font-weight: bold; color: #1e293b; margin-top: 5px; }
 
@@ -39,8 +40,8 @@ body { font-family: sans-serif; margin: 0; background: #2d1a2d; }
 .field { display: flex; flex-direction: column; }
 .field.full-width { grid-column: span 2; }
 .field label { font-size: 11px; font-weight: bold; color: var(--vino); }
-.field input { border: none; border-bottom: 1px solid #ccc; padding: 5px; font-size: 13px; }
-.input-important { color: #d90429; font-weight: bold; font-size: 16px !important; }
+.field input { border: none; border-bottom: 1px solid #ccc; padding: 5px; font-size: 13px; background: transparent; }
+.input-important { color: #d90429; font-weight: bold; font-size: 16px; }
 
 /* TABLA */
 table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 12px; }
@@ -70,47 +71,73 @@ td input { width: 95%; border: 1px solid #ddd; padding: 4px; }
     cursor: pointer; 
 }
 
-/* CONFIGURACIÓN PARA MEDIA CARTA */
+/* =======================================================
+   CONFIGURACIÓN EXCLUSIVA PARA IMPRESIÓN ULTRA-COMPACTA
+   ======================================================= */
 @media print {
     @page {
         size: 5.5in 8.5in;
-        margin: 0.5cm;
+        margin: 0.2cm 0.4cm 0.4cm 0.4cm; /* Reducción de márgenes físicos */
     }
-    body { background: white !important; }
+
+    /* Forzar fondo blanco y ocultar elementos innecesarios */
+    body { background: white; }
     .no-print, .login-container { display: none !important; }
-    .admin-panel { 
-        max-width: 100% !important; 
-        margin: 0 !important; 
-        padding: 0 !important; 
-        box-shadow: none !important; 
-    }
-    .panel-header .logo-la-costura { width: 100px; }
-    input { border: none !important; background: transparent !important; }
-    .input-important { font-size: 20px !important; }
-    .resumen-container { border: 1px solid var(--vino) !important; }
-}
-
-@media print {
-    /* ... tus otras reglas ... */
-
-    @page {
-        size: 5.5in 8.5in;
-        margin: 0.5cm;
-    }
-
-    /* Esta regla elimina elementos extraños que el navegador pueda insertar */
+    
+    /* Forzar renderizado de colores e inhabilitar herramientas de medición externas */
     * {
         -webkit-print-color-adjust: exact !important;
         print-color-adjust: exact !important;
     }
+    div[class*="measure"], div[id*="measure"] { display: none !important; }
 
-    /* Oculta cualquier caja negra o etiqueta de medición */
-    div[class*="measure"], 
-    div[id*="measure"],
-    .no-print {
-        display: none !important;
+    /* Expandir panel al ancho del papel y retirar sombras */
+    .admin-panel { 
+        max-width: 100%; 
+        margin: 0; 
+        padding: 0; 
+        box-shadow: none; 
+        border: none;
     }
+    
+    /* Compresión extrema del encabezado para máximo ahorro de papel */
+    .panel-header {
+        padding-bottom: 2px;
+        margin-bottom: 6px;
+        border-bottom: 1px solid var(--vino);
+    }
+    
+    /* Ajuste milimétrico del logotipo (Clase corregida del HTML) */
+    #admin-panel .logo-la-costura { 
+        width: 80px; 
+        margin: 0 auto 1px auto;
+        padding: 5px;
+    }
+    
+    .panel-header .slogan { font-size: 8px; margin: 1px 0; line-height: 10px; }
+    .panel-header h1 { font-size: 13px; margin: 1px 0; font-weight: bold; }
+    .panel-header .info-text { font-size: 8px; margin: 1px 0; color: #333; }
+    .panel-header .highlight-text { font-size: 9px; margin-top: 1px; letter-spacing: 0.5px; }
 
-    body { background: white !important; }
-    .admin-panel { border: none !important; box-shadow: none !important; }
+    /* Reducción en la sección de datos del cliente */
+    .client-grid { gap: 4px; margin-bottom: 8px; }
+    .field label { font-size: 9px; }
+    .field input { padding: 2px; font-size: 11px; border-bottom: none; }
+    .field .input-important { font-size: 15px; }
+
+    /* Ajustes compactos en la tabla */
+    table { margin-top: 4px; font-size: 11px; }
+    th { padding: 4px; }
+    td { padding: 3px; }
+    td input { border: none; padding: 0; }
+
+    /* Contenedor compacto para totales finales */
+    .resumen-container { 
+        border: 1px solid var(--vino); 
+        margin: 8px 0; 
+        padding: 4px; 
+    }
+    .resumen-item label { font-size: 9px; }
+    .resumen-item input { border: none; font-size: 11px; }
+    .resumen-item span { font-size: 14px; }
 }
