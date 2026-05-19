@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <title>La Costura - Panel Administrativo</title>   
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="admin-style.css">
+</head>
+<body>
+    <section id="admin-login" class="login-container">
+        <div class="login-box">
+            <i class="fas fa-scissors" style="color: #7a1b4d; font-size: 2rem; margin-bottom: 10px;"></i>
+            <h2>La Costura</h2>
+            <input type="password" id="admin-pass" placeholder="Clave de administrador">
+            <button onclick="verificarAcceso()" class="btn-ingreso">INGRESAR AL PANEL</button>
+        </div>
+    </section>
+
+    <section id="admin-panel" class="admin-panel hidden">
+        <div class="panel-header">
+            <img src="img/logo-laCostura.jpeg" alt="Logo" class="logo-admin">
+            <p class="slogan">Todo tipo de reparaciones de ropa.<br>Damas, hombres, niños</p>
+            <h1>MARTA TORRADO DURÁN</h1>
+            <p class="info-text">NIT. 63536845-7 | Calle 105 No. 21A-42 | Provenza</p>
+            <p class="highlight-text">CLÍNICA DE ROPA - CACHARRERÍA</p>
+            <button onclick="cerrarSesion()" class="btn-logout no-print">Cerrar Sesión</button>
+        </div>
+
+        <form id="form-ticket">
+            <div class="client-grid">
+                <div class="field">
+                    <label>No. ORDEN:</label>
+                    <input type="text" id="orden-no" class="input-important" value="001">
+                </div>
+                <div class="field">
+                    <label>FECHA REGISTRO:</label>
+                    <input type="date" id="fecha-auto">
+                </div>
+                <div class="field full-width">
+                    <label>CLIENTE:</label>
+                    <input type="text" id="cliente-nom" placeholder="Nombre del cliente">
+                </div>
+                <div class="field">
+                    <label>DIRECCIÓN:</label>
+                    <input type="text" id="cliente-dir" placeholder="Dirección">
+                </div>
+                <div class="field">
+                    <label>CELULAR:</label>
+                    <input type="text" id="cliente-cel" placeholder="Número">
+                </div>
+                
+                <div class="field full-width">
+                    <label>FECHA DE ENTREGA (ALERTA DE TIEMPO):</label>
+                    <input type="date" id="fecha-entrega">
+                </div>
+            </div>
+
+            <div class="table-container">
+                <table id="tabla-pedidos">
+                    <thead>
+                        <tr>
+                            <th>CANT.</th>
+                            <th>DESCRIPCIÓN</th>
+                            <th>VALOR UNIT.</th>
+                            <th>TOTAL</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        </tbody>
+                </table>
+                <button type="button" onclick="agregarFila()" class="btn-add no-print">+ Agregar Prenda/Artículo</button>
+            </div>
+
+            <div class="resumen-container">
+                <div class="resumen-item">
+                    <label>ABONO $</label>
+                    <input type="number" id="abono-val" value="0">
+                </div>
+                <div class="resumen-item">
+                    <label>SALDO $</label>
+                    <span id="display-saldo">0</span>
+                </div>
+                <div class="resumen-item">
+                    <label>TOTAL $</label>
+                    <span id="display-total">0</span>
+                </div>
+            </div>
+
+            <div class="print-section no-print">
+                <button type="button" onclick="generarEImprimir()" class="btn-print">GENERAR E IMPRIMIR RECIBO</button>
+            </div>
+        </form>
+    </section>
+
+    <script src="admin-logic.js"></script>
+</body>
+</html>
