@@ -4,113 +4,333 @@
     --bg: #f4f7f6;
 }
 
-body { font-family: sans-serif; margin: 0; background: #2d1a2d; }
-.hidden { display: none !important; }
+body {
+    font-family: sans-serif;
+    margin: 0;
+    background: #2d1a2d;
+}
 
-/* LOGIN CORREGIDO */
-.login-container { display: flex; justify-content: center; align-items: center; height: 100vh; }
-.login-box { background: white; padding: 30px; border-radius: 15px; text-align: center; width: 320px; }
-.login-box input { 
-    width: 90%; 
-    padding: 10px; 
-    margin: 15px 0; 
-    border: 1px solid #ccc; 
+/* Selector específico para asegurar el ocultamiento correcto sin usar !important */
+body .hidden, 
+section.hidden,
+#admin-panel.hidden {
+    display: none;
+}
+
+/* INTERFAZ DE LOGEO (ACCESO) */
+.login-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.login-box {
+    background: white;
+    padding: 30px;
+    border-radius: 15px;
+    text-align: center;
+    width: 320px;
+}
+
+.login-box input {
+    width: 90%;
+    padding: 10px;
+    margin: 15px 0;
+    border: 1px solid #ccc;
     border-radius: 5px;
 }
-.btn-ingreso { 
-    width: 100%; padding: 12px; background: var(--vino); color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold;
+
+.btn-ingreso {
+    width: 100%;
+    padding: 12px;
+    background: var(--vino);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
 }
 
-/* PANEL ADMIN COMPACTO */
-.admin-panel { max-width: 600px; margin: 20px auto; background: white; border-radius: 10px; padding: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
-
-.panel-header { text-align: center; border-bottom: 2px solid var(--vino); padding-bottom: 10px; margin-bottom: 15px; }
-.logo-admin { width: 140px; }
-.slogan { font-size: 11px; color: var(--vino); margin: 5px 0; }
-.panel-header h1 { font-size: 18px; color: var(--vino); margin: 5px 0; }
-.panel-header h3 { font-size: 14px; margin: 2px 0; color: var(--vino); }
-.info-text { font-size: 11px; margin: 2px 0; }
-.highlight-text { font-size: 12px; font-weight: bold; color: #1e293b; margin-top: 5px; }
-
-.btn-logout { background: var(--gris); color: white; border: none; padding: 5px 12px; border-radius: 4px; font-size: 12px; cursor: pointer; margin-top: 10px; }
-
-/* GRID DE CLIENTE */
-.client-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 15px; }
-.field { display: flex; flex-direction: column; }
-.field.full-width { grid-column: span 2; }
-.field label { font-size: 11px; font-weight: bold; color: var(--vino); }
-.field input { border: none; border-bottom: 1px solid #ccc; padding: 5px; font-size: 13px; }
-.input-important { color: #d90429; font-weight: bold; font-size: 16px !important; }
-
-/* TABLA */
-table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 12px; }
-th { background: var(--vino); color: white; padding: 8px; }
-td { border: 1px solid #eee; padding: 5px; }
-td input { width: 95%; border: 1px solid #ddd; padding: 4px; }
-
-.btn-add { margin-top: 10px; background: var(--gris); color: white; border: none; padding: 8px; border-radius: 5px; cursor: pointer; width: 100%; font-size: 12px; }
-
-/* RESUMEN */
-.resumen-container { border: 2px solid var(--vino); border-radius: 8px; margin: 15px 0; padding: 10px; display: flex; justify-content: space-around; text-align: center; }
-.resumen-item label { display: block; font-size: 11px; font-weight: bold; color: var(--vino); }
-.resumen-item input { width: 80px; text-align: center; border: 1px solid #ccc; }
-.resumen-item span { font-size: 18px; font-weight: bold; color: var(--vino); }
-
-/* SECCIÓN IMPRESIÓN */
-.print-section { margin-top: 20px; }
-.btn-print { 
-    width: 100%; 
-    padding: 18px; 
-    background: var(--vino); 
-    color: white; 
-    border: none; 
-    border-radius: 10px; 
-    font-size: 16px; 
-    font-weight: bold; 
-    cursor: pointer; 
+/* MAQUETACIÓN DEL PANEL DE ADMINISTRACIÓN */
+.admin-panel {
+    max-width: 600px;
+    margin: 20px auto;
+    background: white;
+    border-radius: 10px;
+    padding: 15px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
 }
 
-/* CONFIGURACIÓN PARA MEDIA CARTA */
+.panel-header {
+    text-align: center;
+    border-bottom: 2px solid var(--vino);
+    padding-bottom: 10px;
+    margin-bottom: 15px;
+}
+
+.logo-admin {
+    width: 140px;
+}
+
+.slogan {
+    font-size: 11px;
+    color: var(--vino);
+    margin: 5px 0;
+}
+
+.panel-header h1 {
+    font-size: 18px;
+    color: var(--vino);
+    margin: 5px 0;
+}
+
+.panel-header h3 {
+    font-size: 14px;
+    margin: 2px 0;
+    color: var(--vino);
+}
+
+.info-text {
+    font-size: 11px;
+    margin: 2px 0;
+}
+
+.highlight-text {
+    font-size: 12px;
+    font-weight: bold;
+    color: #1e293b;
+    margin-top: 5px;
+}
+
+.btn-logout {
+    background: var(--gris);
+    color: white;
+    border: none;
+    padding: 5px 12px;
+    border-radius: 4px;
+    font-size: 12px;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+/* CUADRÍCULA DE DATOS DEL CLIENTE */
+.client-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.field {
+    display: flex;
+    flex-direction: column;
+}
+
+.field.full-width {
+    grid-column: span 2;
+}
+
+.field label {
+    font-size: 11px;
+    font-weight: bold;
+    color: var(--vino);
+    margin-bottom: 2px;
+}
+
+.field input {
+    border: none;
+    border-bottom: 1px solid #ccc;
+    padding: 5px;
+    font-size: 13px;
+    background: transparent;
+}
+
+.client-grid .field .input-important {
+    color: #d90429;
+    font-weight: bold;
+    font-size: 16px;
+}
+
+/* TABLA DINÁMICA DE PRENDAS */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+    font-size: 12px;
+}
+
+th {
+    background: var(--vino);
+    color: white;
+    padding: 8px;
+}
+
+td {
+    border: 1px solid #eee;
+    padding: 5px;
+}
+
+td input {
+    width: 95%;
+    border: 1px solid #ddd;
+    padding: 4px;
+}
+
+.btn-add {
+    margin-top: 10px;
+    background: var(--gris);
+    color: white;
+    border: none;
+    padding: 8px;
+    border-radius: 5px;
+    cursor: pointer;
+    width: 100%;
+    font-size: 12px;
+}
+
+/* RESUMEN DE SALDOS Y TOTALES */
+.resumen-container {
+    border: 2px solid var(--vino);
+    border-radius: 8px;
+    margin: 15px 0;
+    padding: 10px;
+    display: flex;
+    justify-content: space-around;
+    text-align: center;
+}
+
+.resumen-item label {
+    display: block;
+    font-size: 11px;
+    font-weight: bold;
+    color: var(--vino);
+}
+
+.resumen-item input {
+    width: 80px;
+    text-align: center;
+    border: 1px solid #ccc;
+}
+
+.resumen-item span {
+    font-size: 18px;
+    font-weight: bold;
+    color: var(--vino);
+}
+
+/* BOTONES OPERATIVOS */
+.print-section {
+    margin-top: 20px;
+}
+
+.btn-print {
+    width: 100%;
+    padding: 18px;
+    background: var(--vino);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+/* ESTILOS DE ALERTA DINÁMICA DE PANTALLA (CON ESPECIFICIDAD DIRECTA) */
+.client-grid .field input[type="date"]#fecha-entrega.alerta-verde {
+    background: #4caf50;
+    color: #ffffff;
+    border: 1px solid #388e3c;
+    border-radius: 4px;
+    padding: 5px;
+    font-weight: bold;
+}
+
+.client-grid .field input[type="date"]#fecha-entrega.alerta-amarillo {
+    background: #ffeb3b;
+    color: #000000;
+    border: 1px solid #fbc02d;
+    border-radius: 4px;
+    padding: 5px;
+    font-weight: bold;
+}
+
+.client-grid .field input[type="date"]#fecha-entrega.alerta-rojo {
+    background: #f44336;
+    color: #ffffff;
+    border: 1px solid #d32f2f;
+    border-radius: 4px;
+    padding: 5px;
+    font-weight: bold;
+}
+
+/* ======================================================== */
+/* MEDIA QUERY: CONFIGURACIÓN EXCLUSIVA PARA EL TICKET IMPRESO */
+/* ======================================================== */
 @media print {
     @page {
         size: 5.5in 8.5in;
         margin: 0.5cm;
     }
-    body { background: white !important; }
-    .no-print, .login-container { display: none !important; }
-    .admin-panel { 
-        max-width: 100% !important; 
-        margin: 0 !important; 
-        padding: 0 !important; 
-        box-shadow: none !important; 
-    }
-    input { border: none !important; background: transparent !important; }
-    .input-important { font-size: 20px !important; }
-    .resumen-container { border: 1px solid var(--vino) !important; }
-}
 
-@media print {
-    /* ... tus otras reglas ... */
-
-    @page {
-        size: 5.5in 8.5in;
-        margin: 0.5cm;
+    body {
+        background: white;
     }
 
-    /* Esta regla elimina elementos extraños que el navegador pueda insertar */
-    * {
-        -webkit-print-color-adjust: exact !important;
-        print-color-adjust: exact !important;
-    }
-
-    /* Oculta cualquier caja negra o etiqueta de medición */
-    div[class*="measure"], 
-    div[id*="measure"],
-    .no-print {
+    /* Ocultar elementos operativos en el papel (Estándar correcto de uso de !important) */
+    .no-print,
+    .login-container,
+    .btn-add,
+    .btn-logout,
+    .print-section,
+    #admin-login,
+    section#admin-panel.admin-panel .hidden,
+    body .hidden {
         display: none !important;
     }
 
-    body { background: white !important; }
-    .admin-panel { border: none !important; box-shadow: none !important; }
-}
+    /* Adaptar panel administrativo a tamaño completo de hoja */
+    .admin-panel {
+        max-width: 100%;
+        margin: 0;
+        padding: 0;
+        box-shadow: none;
+        border: none;
+        display: block;
+    }
 
+    /* Limpieza visual de cajas de texto */
+    .field input {
+        border: none;
+        background: transparent;
+        color: #000000;
+    }
+
+    .client-grid .field .input-important {
+        font-size: 20px;
+    }
+
+    .resumen-container {
+        border: 1px solid var(--vino);
+    }
+
+    * {
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+    }
+
+    /* REMOCIÓN ABSOLUTA DE COLORES EN IMPRESIÓN */
+    .client-grid .field input[type="date"]#fecha-entrega,
+    .client-grid .field input[type="date"]#fecha-entrega.alerta-verde,
+    .client-grid .field input[type="date"]#fecha-entrega.alerta-amarillo,
+    .client-grid .field input[type="date"]#fecha-entrega.alerta-rojo {
+        background: transparent;
+        background-color: transparent;
+        color: #000000;
+        border: none;
+        border-bottom: 1px solid #ccc;
+        border-radius: 0;
+        padding: 5px 0;
+        font-weight: normal;
+    }
+}
