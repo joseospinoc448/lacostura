@@ -126,9 +126,184 @@ document.addEventListener("DOMContentLoaded", () => {
 		}
 		// Cargar primera fila de trabajo por defecto
 		agregarFila();
+
+		// Inicializar el buscador (estará vacío por defecto)
+		window.buscarOrdenes();
 	}
 
+	// ========================================================
+	// LOGICA DE HISTORIAL: GUARDADO Y BÚSQUEDA OPTIMIZADA
+	// ========================================================
+
+	function guardarOrdenEnHistorial() {
+		const ordenNo = (document.getElementById("orden-no").value || "S/N").trim();
+		const clienteNom = document.getElementById("cliente-nom").value.trim();
+
+		if (!clienteNom) return;
+
+		const fechaReg = document.getElementById("fecha-auto").value || "";
+		const clienteDir = document.getElementById("cliente-dir").value || "";
+		const clienteCel = document.getElementById("cliente-cel").value || "";
+		const fechaEntrega = document.getElementById("fecha-entrega").value || "";
+		const abonoVal =
+			parseFloat(document.getElementById("abono-val").value) || 0;
+
+		let totalCalculado = 0;
+		const prendas = [];
+		document.querySelectorAll("#tabla-pedidos tbody tr").forEach((tr) => {
+			const cant = parseFloat(tr.querySelector(".c-cant").value) || 0;
+			const desc = tr.querySelector(".c-desc").value.trim();
+			const unit = parseFloat(tr.querySelector(".c-unit").value) || 0;
+			const subtotal = cant * unit;
+
+			if (desc) {
+				prendas.push({
+					cant: cant.toString(),
+					desc,
+					unit: unit.toString(),
+					total: subtotal.toString(),
+				});
+				totalCalculado += subtotal;
+			}
+		});
+
+		const saldoCalculado = totalCalculado - abonoVal;
+
+		const nuevaOrden = {
+			id: Date.now(),
+			ordenNo,
+			fechaReg,
+			clienteNom,
+			clienteDir,
+			clienteCel,
+			fechaEntrega,
+			abonoVal: abonoVal.toString(),
+			totalVal: totalCalculado.toLocaleString(),
+			saldoVal: saldoCalculado.toLocaleString(),
+			prendas,
+		};
+
+		let historial = JSON.parse(localStorage.getItem("historial_costura")) || [];
+
+		// Eliminamos estrictamente cualquier duplicado previo de este mismo número de orden
+		historial = historial.filter(
+			(item) => item.ordenNo.toLowerCase() !== ordenNo.toLowerCase(),
+		);
+
+		// Insertamos la orden fresca al inicio
+		historial.unshift(nuevaOrden);
+
+		localStorage.setItem("historial_costura", JSON.stringify(historial));
+	}
+
+	window.buscarOrdenes = () => {
+		const query = document
+			.getElementById("buscar-cliente")
+			.value.toLowerCase()
+			.trim();
+		const contenedorResultados = document.getElementById("resultados-busqueda");
+		if (!contenedorResultados) return;
+
+		contenedorResultados.innerHTML = "";
+
+		// MEJORA: Si la caja de búsqueda está vacía, no muestra nada (así evitamos ver registros viejos por error)
+		if (query === "") {
+			contenedorResultados.innerHTML = `<p style="font-size: 12px; color: #64748b; padding: 5px;">Escribe el nombre de un cliente para consultar su historial.</p>`;
+			return;
+		}
+
+		const historial =
+			JSON.parse(localStorage.getItem("historial_costura")) || [];
+
+		const filtrados = historial.filter((orden) =>
+			orden.clienteNom.toLowerCase().includes(query),
+		);
+
+		if (filtrados.length === 0) {
+			contenedorResultados.innerHTML = `<p style="font-size: 12px; color: #64748b; padding: 5px;">No se encontraron órdenes para este cliente.</p>`;
+			return;
+		}
+
+		filtrados.forEach((orden) => {
+			const card = document.createElement("div");
+			card.className = "search-item-card";
+			card.innerHTML = `
+                <div class="search-item-info">
+                    <p><span class="order-tag">Orden No. ${orden.ordenNo}</span> — <span class="client-tag">${orden.clienteNom}</span></p>
+                    <p style="color: #475569;"><i class="fas fa-tshirt"></i> ${orden.prendas.length} artículo(s)</p>
+                </div>
+                <div class="search-item-status">
+                    <span class="balance-tag">Saldo: $${orden.saldoVal}</span>
+                    <span class="date-tag">Entrega: ${orden.fechaEntrega}</span>
+                </div>
+            `;
+			card.onclick = () => cargarOrdenEnFormulario(orden.id);
+			contenedorResultados.appendChild(card);
+		});
+	};
+
+	function cargarOrdenEnFormulario(id) {
+		const historial =
+			JSON.parse(localStorage.getItem("historial_costura")) || [];
+		const orden = historial.find((item) => item.id === id);
+		if (!orden) return;
+
+		document.getElementById("orden-no").value = orden.ordenNo;
+		document.getElementById("fecha-auto").value = orden.fechaReg;
+		document.getElementById("cliente-nom").value = orden.clienteNom;
+		document.getElementById("cliente-dir").value = orden.clienteDir;
+		document.getElementById("cliente-cel").value = orden.clienteCel;
+		document.getElementById("fecha-entrega").value = orden.fechaEntrega;
+		document.getElementById("abono-val").value = orden.abonoVal;
+
+		const tbody = document.querySelector("#tabla-pedidos tbody");
+		if (tbody) {
+			tbody.innerHTML = "";
+			if (orden.prendas.length === 0) {
+				window.agregarFila();
+			} else {
+				orden.prendas.forEach((prenda) => {
+					const tr = document.createElement("tr");
+					tr.innerHTML = `
+                        <td><input type="number" class="c-cant" value="${prenda.cant}"></td>
+                        <td><input type="text" class="c-desc" value="${prenda.desc}"></td>
+                        <td><input type="number" class="c-unit" value="${prenda.unit}"></td>
+                        <td><input type="number" class="c-total" value="${prenda.total}" readonly></td>
+                    `;
+					tbody.appendChild(tr);
+				});
+			}
+		}
+
+		vincularCalculos();
+		recalcular();
+		calcularAlertaFecha();
+
+		window.scrollTo({ top: 0, behavior: "smooth" });
+	}
+
+	// 4. GENERAR E IMPRIMIR RECIBO
 	window.generarEImprimir = () => {
-		window.print();
+		guardarOrdenEnHistorial(); // Guarda la orden actual en el historial inmediatamente
+		window.print(); // Abre la impresión
+
+		// Limpiamos el buscador para la siguiente transacción
+		document.getElementById("buscar-cliente").value = "";
+		window.buscarOrdenes();
+
+		// Reseteamos el formulario principal para quedar limpios para el siguiente cliente
+		document.getElementById("form-ticket").reset();
+		const tbody = document.querySelector("#tabla-pedidos tbody");
+		if (tbody) tbody.innerHTML = "";
+		window.agregarFila();
+		recalcular();
+
+		// Auto-incremento del número correlativo para la próxima orden
+		const historialActual =
+			JSON.parse(localStorage.getItem("historial_costura")) || [];
+		const proximoNumero = historialActual.length + 1;
+		document.getElementById("orden-no").value = proximoNumero
+			.toString()
+			.padStart(3, "0");
 	};
 });
