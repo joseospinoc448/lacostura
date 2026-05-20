@@ -1,5 +1,5 @@
 document.addEventListener("DOMContentLoaded", () => {
-	const CLAVE_CORRECTA = "1234"; // Define aquí tu contraseña de ingreso
+	const CLAVE_CORRECTA = "Jc9263448!"; // Define aquí tu contraseña de ingreso
 
 	// 1. CONTROL DE ACCESO (LOGIN)
 	window.verificarAcceso = () => {
