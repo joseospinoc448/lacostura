@@ -1,3 +1,4 @@
 User-agent: *
 Allow: /
-Sitemap: https://lacostura.netlify.app/sitemap.xml
+Sitemap: https://www.lacostura.shop/sitemap.xml
+
