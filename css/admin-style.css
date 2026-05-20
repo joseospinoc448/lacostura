@@ -264,6 +264,86 @@ td input {
     font-weight: bold;
 }
 
+/* ESTILOS AGREGADOS PARA LA SECCIÓN DE BÚSQUEDA HISTÓRICA */
+.search-container {
+    margin-top: 30px;
+    padding-top: 10px;
+}
+
+.separator {
+    border: 0;
+    border-top: 2px dashed #ccc;
+    margin-bottom: 20px;
+}
+
+.search-container h2 {
+    font-size: 16px;
+    color: var(--vino);
+    margin-bottom: 12px;
+}
+
+.search-box input {
+    width: 96%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 13px;
+    margin-bottom: 15px;
+}
+
+.results-container {
+    max-height: 250px;
+    overflow-y: auto;
+}
+
+.search-item-card {
+    background: #fdfdfd;
+    border: 1px solid #e2e8f0;
+    border-radius: 6px;
+    padding: 10px;
+    margin-bottom: 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.search-item-card:hover {
+    background: #f5f5f5;
+}
+
+.search-item-info p {
+    margin: 2px 0;
+    font-size: 12px;
+}
+
+.search-item-info .order-tag {
+    color: #d90429;
+    font-weight: bold;
+}
+
+.search-item-info .client-tag {
+    font-weight: bold;
+    color: #1e293b;
+}
+
+.search-item-status {
+    text-align: right;
+}
+
+.search-item-status .balance-tag {
+    font-size: 13px;
+    font-weight: bold;
+    color: var(--vino);
+    display: block;
+}
+
+.search-item-status .date-tag {
+    font-size: 11px;
+    color: #64748b;
+}
+
 /* ======================================================== */
 /* MEDIA QUERY: CONFIGURACIÓN EXCLUSIVA PARA EL TICKET IMPRESO */
 /* ======================================================== */
@@ -285,7 +365,9 @@ td input {
     .print-section,
     #admin-login,
     section#admin-panel.admin-panel .hidden,
-    body .hidden {
+    body .hidden,
+    .search-container,
+    #seccion-busqueda {
         display: none !important;
     }
 
