@@ -13,7 +13,10 @@
         <div class="login-box">
             <i class="fas fa-scissors" style="color: #7a1b4d; font-size: 2rem; margin-bottom: 10px;"></i>
             <h2>La Costura</h2>
-            <input type="password" id="admin-pass" placeholder="Clave de administrador">
+            <div class="password-wrapper">
+                <input type="password" id="admin-pass" placeholder="Clave de administrador">
+                <i class="fas fa-eye" id="togglePassword" onclick="togglePasswordVisibility()"></i>
+            </div>
             <button onclick="verificarAcceso()" class="btn-ingreso">INGRESAR AL PANEL</button>
         </div>
     </section>
@@ -25,14 +28,18 @@
             <h1>MARTA TORRADO DURÁN</h1>
             <p class="info-text">NIT. 63536845-7 | Calle 105 No. 21A-42 | Provenza</p>
             <p class="highlight-text">CLÍNICA DE ROPA - CACHARRERÍA</p>
+            
             <button onclick="cerrarSesion()" class="btn-logout no-print">Cerrar Sesión</button>
+            <button onclick="descargarBackup()" class="btn-backup no-print" style="background: #28a745; color: white; border: none; padding: 5px 12px; border-radius: 4px; cursor: pointer; margin-top: 10px;">
+                <i class="fas fa-download"></i> Descargar Backup
+            </button>
         </div>
 
         <form id="form-ticket">
             <div class="client-grid">
                 <div class="field">
                     <label>No. ORDEN:</label>
-                    <input type="text" id="orden-no" class="input-important" value="001">
+                    <input type="text" id="orden-no" class="input-important" value="0001">
                 </div>
                 <div class="field">
                     <label>FECHA REGISTRO:</label>
@@ -100,7 +107,7 @@
                 <input type="text" id="buscar-cliente" onkeyup="buscarOrdenes()" placeholder="Escribe el nombre del cliente para buscar...">
             </div>
             <div id="resultados-busqueda" class="results-container">
-                </div>
+            </div>
         </div>
     </section>
 
