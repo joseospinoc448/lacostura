@@ -33,12 +33,30 @@ section.hidden,
     width: 320px;
 }
 
-.login-box input {
+/* Nuevos estilos para el contenedor de contraseña */
+.password-wrapper {
+    position: relative;
     width: 90%;
+    margin: 15px auto;
+}
+
+.password-wrapper input {
+    width: 100%;
     padding: 10px;
-    margin: 15px 0;
+    padding-right: 40px; /* Espacio para el icono */
+    margin: 0;
     border: 1px solid #ccc;
     border-radius: 5px;
+    box-sizing: border-box;
+}
+
+.password-wrapper i {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    color: var(--gris);
 }
 
 .btn-ingreso {
@@ -50,6 +68,7 @@ section.hidden,
     border-radius: 8px;
     cursor: pointer;
     font-weight: bold;
+    margin-top: 10px;
 }
 
 /* MAQUETACIÓN DEL PANEL DE ADMINISTRACIÓN */
