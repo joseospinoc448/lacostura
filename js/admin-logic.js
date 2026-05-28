@@ -1,51 +1,58 @@
 document.addEventListener("DOMContentLoaded", () => {
-	const CLAVE_CORRECTA = "Jc9263448!"; // Define aquí tu contraseña de ingreso
+	const CLAVE_CORRECTA = "Jc9263448!";
 
-	// 1. CONTROL DE ACCESO (LOGIN)
-	window.verificarAcceso = () => {
+	// --- VISIBILIDAD CONTRASEÑA ---
+	window.togglePasswordVisibility = () => {
 		const inputPass = document.getElementById("admin-pass");
-		if (!inputPass) return;
+		const icon = document.getElementById("togglePassword");
+		if (inputPass.type === "password") {
+			inputPass.type = "text";
+			icon.classList.remove("fa-eye");
+			icon.classList.add("fa-eye-slash");
+		} else {
+			inputPass.type = "password";
+			icon.classList.remove("fa-eye-slash");
+			icon.classList.add("fa-eye");
+		}
+	};
 
-		const pass = inputPass.value;
-		if (pass === CLAVE_CORRECTA) {
-			// Intercambio limpio de pantallas
+	// --- ACCESO ---
+	window.verificarAcceso = () => {
+		if (document.getElementById("admin-pass").value === CLAVE_CORRECTA) {
 			document.getElementById("admin-login").classList.add("hidden");
 			document.getElementById("admin-panel").classList.remove("hidden");
-
-			// Inicializar las funciones operativas sólo tras ingresar exitosamente
 			inicializarEventosPanel();
 		} else {
 			alert("Clave incorrecta");
 		}
 	};
 
-	// Escuchar la tecla Enter en el campo de contraseña
-	const adminPassInput = document.getElementById("admin-pass");
-	if (adminPassInput) {
-		adminPassInput.addEventListener("keypress", (e) => {
-			if (e.key === "Enter") {
-				window.verificarAcceso();
-			}
-		});
-	}
+	document.getElementById("admin-pass")?.addEventListener("keypress", (e) => {
+		if (e.key === "Enter") window.verificarAcceso();
+	});
 
-	// Salir del panel administrativo y resetear estado
-	window.cerrarSesion = () => {
-		location.reload();
+	window.cerrarSesion = () => location.reload();
+
+	// --- RESPALDO (BACKUP) ---
+	window.descargarBackup = () => {
+		const historial = localStorage.getItem("historial_costura");
+		if (!historial) {
+			alert("No hay datos.");
+			return;
+		}
+		const blob = new Blob([historial], { type: "application/json" });
+		const url = URL.createObjectURL(blob);
+		const a = document.createElement("a");
+		a.href = url;
+		a.download = `backup_la_costura_${new Date().toISOString().split("T")[0]}.json`;
+		a.click();
 	};
 
-	// 2. GESTIÓN DE LA TABLA DE PEDIDOS Y ARREGLOS
+	// --- LÓGICA DE PEDIDOS ---
 	window.agregarFila = () => {
 		const tbody = document.querySelector("#tabla-pedidos tbody");
-		if (!tbody) return;
-
 		const tr = document.createElement("tr");
-		tr.innerHTML = `
-            <td><input type="number" class="c-cant" value="1"></td>
-            <td><input type="text" class="c-desc" placeholder="Arreglo de prenda..."></td>
-            <td><input type="number" class="c-unit" value="0"></td>
-            <td><input type="number" class="c-total" value="0" readonly></td>
-        `;
+		tr.innerHTML = `<td><input type="number" class="c-cant" value="1"></td><td><input type="text" class="c-desc" placeholder="Arreglo..."></td><td><input type="number" class="c-unit" value="0"></td><td><input type="number" class="c-total" value="0" readonly></td>`;
 		tbody.appendChild(tr);
 		vincularCalculos();
 	};
@@ -53,9 +60,7 @@ document.addEventListener("DOMContentLoaded", () => {
 	function vincularCalculos() {
 		document
 			.querySelectorAll(".c-cant, .c-unit, #abono-val")
-			.forEach((input) => {
-				input.oninput = recalcular;
-			});
+			.forEach((input) => (input.oninput = recalcular));
 	}
 
 	function recalcular() {
@@ -67,243 +72,162 @@ document.addEventListener("DOMContentLoaded", () => {
 			tr.querySelector(".c-total").value = sub;
 			totalGeneral += sub;
 		});
-
 		const abono = parseFloat(document.getElementById("abono-val").value) || 0;
-
-		const displayTotal = document.getElementById("display-total");
-		const displaySaldo = document.getElementById("display-saldo");
-
-		if (displayTotal) displayTotal.innerText = totalGeneral.toLocaleString();
-		if (displaySaldo)
-			displaySaldo.innerText = (totalGeneral - abono).toLocaleString();
+		document.getElementById("display-total").innerText =
+			totalGeneral.toLocaleString();
+		document.getElementById("display-saldo").innerText = (
+			totalGeneral - abono
+		).toLocaleString();
 	}
 
-	// 3. LOGICA DE CONTROL DE ALERTAS VISUALES POR FECHA DE ENTREGA
 	function calcularAlertaFecha() {
 		const inputFecha = document.getElementById("fecha-entrega");
 		if (!inputFecha || !inputFecha.value) return;
-
-		// Descomponer la fecha manualmente para evitar desfases de zona horaria
 		const partes = inputFecha.value.split("-");
-		const anio = parseInt(partes[0], 10);
-		const mes = parseInt(partes[1], 10) - 1;
-		const dia = parseInt(partes[2], 10);
-
-		const fechaEntrega = new Date(anio, mes, dia);
-
-		// Obtener la fecha de hoy a las 00:00:00
+		const fechaEntrega = new Date(partes[0], partes[1] - 1, partes[2]);
 		const fechaActual = new Date();
 		fechaActual.setHours(0, 0, 0, 0);
-
-		// Calcular la diferencia en días calendario neta
-		const diferenciaMilisegundos = fechaEntrega - fechaActual;
-		const diferenciaDias = Math.round(
-			diferenciaMilisegundos / (1000 * 60 * 60 * 24),
+		const dif = Math.round(
+			(fechaEntrega - fechaActual) / (1000 * 60 * 60 * 24),
 		);
 
-		// Limpiar clases previas de alerta en pantalla
 		inputFecha.classList.remove(
 			"alerta-verde",
 			"alerta-amarillo",
 			"alerta-rojo",
 		);
-
-		// Evaluar rangos de tiempo establecidos
-		if (diferenciaDias >= 2) {
-			inputFecha.classList.add("alerta-verde");
-		} else if (diferenciaDias === 1) {
-			inputFecha.classList.add("alerta-amarillo");
-		} else {
-			inputFecha.classList.add("alerta-rojo");
-		}
+		if (dif >= 2) inputFecha.classList.add("alerta-verde");
+		else if (dif === 1) inputFecha.classList.add("alerta-amarillo");
+		else if (dif <= 0) inputFecha.classList.add("alerta-rojo");
 	}
 
 	function inicializarEventosPanel() {
-		const fechaEntregaInput = document.getElementById("fecha-entrega");
-		if (fechaEntregaInput) {
-			fechaEntregaInput.addEventListener("change", calcularAlertaFecha);
-			fechaEntregaInput.addEventListener("input", calcularAlertaFecha);
-		}
-		// Cargar primera fila de trabajo por defecto
+		document
+			.getElementById("fecha-entrega")
+			.addEventListener("input", calcularAlertaFecha);
 		agregarFila();
-
-		// Inicializar el buscador (estará vacío por defecto)
 		window.buscarOrdenes();
+		actualizarConsecutivo();
+		// Asignar fecha actual por defecto si está vacío
+		if (!document.getElementById("fecha-auto").value) {
+			document.getElementById("fecha-auto").valueAsDate = new Date();
+		}
 	}
 
-	// ========================================================
-	// LOGICA DE HISTORIAL: GUARDADO Y BÚSQUEDA OPTIMIZADA
-	// ========================================================
+	function actualizarConsecutivo() {
+		const historial =
+			JSON.parse(localStorage.getItem("historial_costura")) || [];
+		let maxNum = 0;
+		historial.forEach((orden) => {
+			const num = parseInt(orden.ordenNo, 10);
+			if (!isNaN(num) && num > maxNum) maxNum = num;
+		});
+		document.getElementById("orden-no").value = (maxNum + 1)
+			.toString()
+			.padStart(4, "0");
+	}
 
 	function guardarOrdenEnHistorial() {
-		const ordenNo = (document.getElementById("orden-no").value || "S/N").trim();
+		const ordenNo = document.getElementById("orden-no").value.trim();
 		const clienteNom = document.getElementById("cliente-nom").value.trim();
+		if (!clienteNom) return false;
 
-		if (!clienteNom) return;
-
-		const fechaReg = document.getElementById("fecha-auto").value || "";
-		const clienteDir = document.getElementById("cliente-dir").value || "";
-		const clienteCel = document.getElementById("cliente-cel").value || "";
-		const fechaEntrega = document.getElementById("fecha-entrega").value || "";
-		const abonoVal =
-			parseFloat(document.getElementById("abono-val").value) || 0;
-
-		let totalCalculado = 0;
 		const prendas = [];
 		document.querySelectorAll("#tabla-pedidos tbody tr").forEach((tr) => {
-			const cant = parseFloat(tr.querySelector(".c-cant").value) || 0;
 			const desc = tr.querySelector(".c-desc").value.trim();
-			const unit = parseFloat(tr.querySelector(".c-unit").value) || 0;
-			const subtotal = cant * unit;
-
-			if (desc) {
+			if (desc)
 				prendas.push({
-					cant: cant.toString(),
+					cant: tr.querySelector(".c-cant").value,
 					desc,
-					unit: unit.toString(),
-					total: subtotal.toString(),
+					unit: tr.querySelector(".c-unit").value,
+					total: tr.querySelector(".c-total").value,
 				});
-				totalCalculado += subtotal;
-			}
 		});
-
-		const saldoCalculado = totalCalculado - abonoVal;
 
 		const nuevaOrden = {
 			id: Date.now(),
 			ordenNo,
-			fechaReg,
 			clienteNom,
-			clienteDir,
-			clienteCel,
-			fechaEntrega,
-			abonoVal: abonoVal.toString(),
-			totalVal: totalCalculado.toLocaleString(),
-			saldoVal: saldoCalculado.toLocaleString(),
+			fechaReg: document.getElementById("fecha-auto").value, // Captura de fecha corregida
+			clienteDir: document.getElementById("cliente-dir").value,
+			clienteCel: document.getElementById("cliente-cel").value,
+			fechaEntrega: document.getElementById("fecha-entrega").value,
+			abonoVal: document.getElementById("abono-val").value,
+			saldoVal: document.getElementById("display-saldo").innerText,
 			prendas,
 		};
 
 		let historial = JSON.parse(localStorage.getItem("historial_costura")) || [];
-
-		// Eliminamos estrictamente cualquier duplicado previo de este mismo número de orden
-		historial = historial.filter(
-			(item) => item.ordenNo.toLowerCase() !== ordenNo.toLowerCase(),
-		);
-
-		// Insertamos la orden fresca al inicio
+		historial = historial.filter((o) => o.ordenNo !== ordenNo);
 		historial.unshift(nuevaOrden);
-
 		localStorage.setItem("historial_costura", JSON.stringify(historial));
+		return true;
 	}
+
+	window.generarEImprimir = () => {
+		if (guardarOrdenEnHistorial()) {
+			setTimeout(() => {
+				window.print();
+				document.getElementById("form-ticket").reset();
+				document.querySelector("#tabla-pedidos tbody").innerHTML = "";
+				agregarFila();
+				recalcular();
+				actualizarConsecutivo();
+				document.getElementById("fecha-auto").valueAsDate = new Date(); // Reset fecha
+				window.buscarOrdenes();
+			}, 500);
+		}
+	};
 
 	window.buscarOrdenes = () => {
 		const query = document
 			.getElementById("buscar-cliente")
 			.value.toLowerCase()
 			.trim();
-		const contenedorResultados = document.getElementById("resultados-busqueda");
-		if (!contenedorResultados) return;
-
-		contenedorResultados.innerHTML = "";
-
-		// MEJORA: Si la caja de búsqueda está vacía, no muestra nada (así evitamos ver registros viejos por error)
-		if (query === "") {
-			contenedorResultados.innerHTML = `<p style="font-size: 12px; color: #64748b; padding: 5px;">Escribe el nombre de un cliente para consultar su historial.</p>`;
-			return;
-		}
-
+		const contenedor = document.getElementById("resultados-busqueda");
+		contenedor.innerHTML = "";
+		if (query === "") return;
 		const historial =
 			JSON.parse(localStorage.getItem("historial_costura")) || [];
-
 		const filtrados = historial.filter((orden) =>
 			orden.clienteNom.toLowerCase().includes(query),
 		);
 
-		if (filtrados.length === 0) {
-			contenedorResultados.innerHTML = `<p style="font-size: 12px; color: #64748b; padding: 5px;">No se encontraron órdenes para este cliente.</p>`;
-			return;
-		}
-
+		const vistos = new Set();
 		filtrados.forEach((orden) => {
+			if (vistos.has(orden.ordenNo)) return;
+			vistos.add(orden.ordenNo);
 			const card = document.createElement("div");
 			card.className = "search-item-card";
-			card.innerHTML = `
-                <div class="search-item-info">
-                    <p><span class="order-tag">Orden No. ${orden.ordenNo}</span> — <span class="client-tag">${orden.clienteNom}</span></p>
-                    <p style="color: #475569;"><i class="fas fa-tshirt"></i> ${orden.prendas.length} artículo(s)</p>
-                </div>
-                <div class="search-item-status">
-                    <span class="balance-tag">Saldo: $${orden.saldoVal}</span>
-                    <span class="date-tag">Entrega: ${orden.fechaEntrega}</span>
-                </div>
-            `;
-			card.onclick = () => cargarOrdenEnFormulario(orden.id);
-			contenedorResultados.appendChild(card);
+			card.innerHTML = `<div class="search-item-info"><p>Orden No. ${orden.ordenNo} — <b>${orden.clienteNom}</b></p></div><div class="search-item-status">Saldo: $${orden.saldoVal}</div>`;
+			card.onclick = () => cargarOrden(orden.id);
+			contenedor.appendChild(card);
 		});
 	};
 
-	function cargarOrdenEnFormulario(id) {
+	function cargarOrden(id) {
 		const historial =
 			JSON.parse(localStorage.getItem("historial_costura")) || [];
 		const orden = historial.find((item) => item.id === id);
 		if (!orden) return;
 
 		document.getElementById("orden-no").value = orden.ordenNo;
-		document.getElementById("fecha-auto").value = orden.fechaReg;
 		document.getElementById("cliente-nom").value = orden.clienteNom;
 		document.getElementById("cliente-dir").value = orden.clienteDir;
 		document.getElementById("cliente-cel").value = orden.clienteCel;
+		document.getElementById("fecha-auto").value = orden.fechaReg; // Carga de fecha corregida
 		document.getElementById("fecha-entrega").value = orden.fechaEntrega;
 		document.getElementById("abono-val").value = orden.abonoVal;
 
 		const tbody = document.querySelector("#tabla-pedidos tbody");
-		if (tbody) {
-			tbody.innerHTML = "";
-			if (orden.prendas.length === 0) {
-				window.agregarFila();
-			} else {
-				orden.prendas.forEach((prenda) => {
-					const tr = document.createElement("tr");
-					tr.innerHTML = `
-                        <td><input type="number" class="c-cant" value="${prenda.cant}"></td>
-                        <td><input type="text" class="c-desc" value="${prenda.desc}"></td>
-                        <td><input type="number" class="c-unit" value="${prenda.unit}"></td>
-                        <td><input type="number" class="c-total" value="${prenda.total}" readonly></td>
-                    `;
-					tbody.appendChild(tr);
-				});
-			}
-		}
-
+		tbody.innerHTML = "";
+		orden.prendas.forEach((p) => {
+			const tr = document.createElement("tr");
+			tr.innerHTML = `<td><input type="number" class="c-cant" value="${p.cant}"></td><td><input type="text" class="c-desc" value="${p.desc}"></td><td><input type="number" class="c-unit" value="${p.unit}"></td><td><input type="number" class="c-total" value="${p.total}" readonly></td>`;
+			tbody.appendChild(tr);
+		});
 		vincularCalculos();
 		recalcular();
 		calcularAlertaFecha();
-
-		window.scrollTo({ top: 0, behavior: "smooth" });
 	}
-
-	// 4. GENERAR E IMPRIMIR RECIBO
-	window.generarEImprimir = () => {
-		guardarOrdenEnHistorial(); // Guarda la orden actual en el historial inmediatamente
-		window.print(); // Abre la impresión
-
-		// Limpiamos el buscador para la siguiente transacción
-		document.getElementById("buscar-cliente").value = "";
-		window.buscarOrdenes();
-
-		// Reseteamos el formulario principal para quedar limpios para el siguiente cliente
-		document.getElementById("form-ticket").reset();
-		const tbody = document.querySelector("#tabla-pedidos tbody");
-		if (tbody) tbody.innerHTML = "";
-		window.agregarFila();
-		recalcular();
-
-		// Auto-incremento del número correlativo para la próxima orden
-		const historialActual =
-			JSON.parse(localStorage.getItem("historial_costura")) || [];
-		const proximoNumero = historialActual.length + 1;
-		document.getElementById("orden-no").value = proximoNumero
-			.toString()
-			.padStart(3, "0");
-	};
 });
