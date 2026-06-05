@@ -364,19 +364,21 @@ td input {
 }
 
 /* ======================================================== */
-/* MEDIA QUERY: CONFIGURACIÓN EXCLUSIVA PARA EL TICKET IMPRESO */
+/* MEDIA QUERY: CONFIGURACIÓN EXCLUSIVA PARA LA TIRILLA DE 80MM */
 /* ======================================================== */
 @media print {
     @page {
-        size: 5.5in 8.5in;
-        margin: 0.5cm;
+        size: 80mm auto;
+        margin: 0mm 2mm;
     }
 
     body {
         background: white;
+        font-size: 14px;
+        color: #000000;
     }
 
-    /* Ocultar elementos operativos en el papel (Estándar correcto de uso de !important) */
+    /* Ocultar elementos operativos en el papel */
     .no-print,
     .login-container,
     .btn-add,
@@ -390,9 +392,10 @@ td input {
         display: none !important;
     }
 
-    /* Adaptar panel administrativo a tamaño completo de hoja */
+    /* Adaptar panel administrativo al tamaño de la tirilla */
     .admin-panel {
-        max-width: 100%;
+        max-width: 100% !important;
+        width: 100% !important;
         margin: 0;
         padding: 0;
         box-shadow: none;
@@ -400,19 +403,82 @@ td input {
         display: block;
     }
 
-    /* Limpieza visual de cajas de texto */
+    /* Datos del cliente */
+    .field label {
+        font-size: 12px;
+        font-weight: bold;
+    }
+
     .field input {
         border: none;
         background: transparent;
         color: #000000;
+        font-size: 14px;
+        font-weight: bold;
     }
 
     .client-grid .field .input-important {
         font-size: 20px;
     }
 
+    /* Tabla de arreglos */
+    table {
+        font-size: 13px;
+        width: 100%;
+        margin-top: 10px;
+    }
+
+    th {
+        font-size: 13px;
+        padding: 6px 2px;
+    }
+
+    td {
+        padding: 6px 2px;
+    }
+
+    /* Oculta EXCLUSIVAMENTE el cuadro del input de descripción (.c-desc) */
+    table td input.c-desc,
+    .hide-on-print-field {
+        display: none !important;
+    }
+
+    /* Muestra e imprime de forma visible el texto plano de la descripción */
+    .print-only-text {
+        display: block !important;
+        font-size: 14px;
+        word-break: break-word;
+        white-space: normal;
+        text-align: left;
+        color: #000000;
+        margin: 0;
+        padding: 2px 0;
+    }
+
+    /* Forza la visibilidad de los inputs numéricos (Cant, Unit, Total) de manera limpia */
+    table td input.c-cant,
+    table td input.c-unit,
+    table td input.c-total {
+        display: block !important;
+        border: none !important;
+        background: transparent !important;
+        width: 100% !important;
+        text-align: center;
+        font-size: 13px;
+        color: #000000;
+        font-weight: bold;
+        padding: 0;
+    }
+
+    /* Totales y abonos */
     .resumen-container {
         border: 1px solid var(--vino);
+        padding: 10px;
+    }
+
+    .resumen-item span {
+        font-size: 16px;
+        font-weight: bold;
     }
 
     * {
@@ -420,18 +486,18 @@ td input {
         print-color-adjust: exact;
     }
 
-    /* REMOCIÓN ABSOLUTA DE COLORES EN IMPRESIÓN */
+    /* REMOCIÓN ABSOLUTA DE COLORES DE FONDO EN CAMPOS DE FECHA */
     .client-grid .field input[type="date"]#fecha-entrega,
     .client-grid .field input[type="date"]#fecha-entrega.alerta-verde,
     .client-grid .field input[type="date"]#fecha-entrega.alerta-amarillo,
     .client-grid .field input[type="date"]#fecha-entrega.alerta-rojo {
-        background: transparent;
-        background-color: transparent;
-        color: #000000;
+        background: transparent !important;
+        background-color: transparent !important;
+        color: #000000 !important;
         border: none;
         border-bottom: 1px solid #ccc;
         border-radius: 0;
         padding: 5px 0;
-        font-weight: normal;
+        font-weight: bold;
     }
 }
