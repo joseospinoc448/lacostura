@@ -54,9 +54,34 @@ window.agregarFila = () => {
 window.generarEImprimir = () => {
 	console.log("Iniciando proceso de impresión...");
 	if (guardarOrdenEnHistorial()) {
-		console.log("Guardado exitoso, esperando 500ms para imprimir...");
+		console.log("Guardado exitoso, preparando elementos para tirilla...");
+
+		// Convertimos únicamente los inputs de descripción (.c-desc) a texto plano
+		const filas = document.querySelectorAll("#tabla-pedidos tbody tr");
+		filas.forEach((tr) => {
+			const inputDesc = tr.querySelector(".c-desc");
+			if (inputDesc) {
+				// Eliminar cualquier texto temporal previo si existía
+				const previo = tr.querySelector(".print-only-text");
+				if (previo) previo.remove();
+
+				// Creamos el contenedor con el texto limpio para el papel
+				const textoPlano = document.createElement("span");
+				textoPlano.className = "print-only-text";
+				textoPlano.innerText = inputDesc.value;
+
+				// Lo inyectamos en la misma celda del input
+				inputDesc.parentNode.appendChild(textoPlano);
+
+				// Marcamos el input para que el CSS lo oculte al imprimir
+				inputDesc.classList.add("hide-on-print-field");
+			}
+		});
+
 		setTimeout(() => {
 			window.print();
+
+			// Limpieza estándar del formulario
 			const formTicket = document.getElementById("form-ticket");
 			if (formTicket) formTicket.reset();
 			const tbody = document.querySelector("#tabla-pedidos tbody");
