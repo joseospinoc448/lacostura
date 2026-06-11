@@ -46,7 +46,13 @@ window.agregarFila = () => {
 	const tbody = document.querySelector("#tabla-pedidos tbody");
 	if (!tbody) return;
 	const tr = document.createElement("tr");
-	tr.innerHTML = `<td><input type="number" class="c-cant" value="1"></td><td><input type="text" class="c-desc" placeholder="Arreglo..."></td><td><input type="number" class="c-unit" value="0"></td><td><input type="number" class="c-total" value="0" readonly></td>`;
+
+	tr.innerHTML = `
+        <td class="col-cant"><input type="number" class="c-cant col-cant-input" value="1"></td>
+        <td class="col-desc"><input type="text" class="c-desc" placeholder="Arreglo..."></td>
+        <td class="col-unit"><input type="number" class="c-unit col-unit-input" value="0"></td>
+        <td class="col-total"><input type="number" class="c-total col-total-input" value="0" readonly></td>
+    `;
 	tbody.appendChild(tr);
 	vincularCalculos();
 };
@@ -54,43 +60,117 @@ window.agregarFila = () => {
 window.generarEImprimir = () => {
 	console.log("Iniciando proceso de impresión...");
 	if (guardarOrdenEnHistorial()) {
-		console.log("Guardado exitoso, preparando elementos para tirilla...");
+		console.log(
+			"Guardado exitoso, preparando elementos para impresión en papel...",
+		);
 
-		// Convertimos únicamente los inputs de descripción (.c-desc) a texto plano
+		// 1. Convertir celdas de la tabla a texto plano con formato de puntos
 		const filas = document.querySelectorAll("#tabla-pedidos tbody tr");
 		filas.forEach((tr) => {
+			const inputCant = tr.querySelector(".c-cant");
+			if (inputCant) {
+				const prev = tr.querySelector(".print-cant-text");
+				if (prev) prev.remove();
+				const txt = document.createElement("span");
+				txt.className = "print-only-text print-cant-text";
+				txt.innerText = inputCant.value;
+				inputCant.parentNode.appendChild(txt);
+				inputCant.classList.add("no-print");
+			}
+
 			const inputDesc = tr.querySelector(".c-desc");
 			if (inputDesc) {
-				// Eliminar cualquier texto temporal previo si existía
-				const previo = tr.querySelector(".print-only-text");
-				if (previo) previo.remove();
+				const prev = tr.querySelector(".print-desc-text");
+				if (prev) prev.remove();
+				const txt = document.createElement("span");
+				txt.className = "print-only-text print-desc-text";
+				txt.innerText = inputDesc.value;
+				inputDesc.parentNode.appendChild(txt);
+				inputDesc.classList.add("no-print");
+			}
 
-				// Creamos el contenedor con el texto limpio para el papel
-				const textoPlano = document.createElement("span");
-				textoPlano.className = "print-only-text";
-				textoPlano.innerText = inputDesc.value;
+			const inputUnit = tr.querySelector(".c-unit");
+			if (inputUnit) {
+				const prev = tr.querySelector(".print-unit-text");
+				if (prev) prev.remove();
+				const txt = document.createElement("span");
+				txt.className = "print-only-text print-unit-text";
+				txt.innerText = parseFloat(inputUnit.value).toLocaleString("es-CO");
+				inputUnit.parentNode.appendChild(txt);
+				inputUnit.classList.add("no-print");
+			}
 
-				// Lo inyectamos en la misma celda del input
-				inputDesc.parentNode.appendChild(textoPlano);
-
-				// Marcamos el input para que el CSS lo oculte al imprimir
-				inputDesc.classList.add("hide-on-print-field");
+			const inputTotal = tr.querySelector(".c-total");
+			if (inputTotal) {
+				const prev = tr.querySelector(".print-total-text");
+				if (prev) prev.remove();
+				const txt = document.createElement("span");
+				txt.className = "print-only-text print-total-text";
+				txt.innerText = parseFloat(inputTotal.value).toLocaleString("es-CO");
+				inputTotal.parentNode.appendChild(txt);
+				inputTotal.classList.add("no-print");
 			}
 		});
+
+		// 2. CORRECCIÓN RADICAL DEL ABONO (Elimina el cero inicial de raíz)
+		const inputAbono = document.getElementById("abono-val");
+		if (inputAbono) {
+			const prevAbono =
+				inputAbono.parentNode.querySelector(".print-abono-text");
+			if (prevAbono) prevAbono.remove();
+
+			// Convertimos estrictamente a número puro usando Number() para limpiar textos fantasmas
+			const numeroAbono = Number(inputAbono.value) || 0;
+
+			const txtAbono = document.createElement("span");
+			txtAbono.className = "print-only-text print-abono-text";
+			txtAbono.style.fontSize = "18px";
+			txtAbono.style.fontWeight = "900";
+			txtAbono.innerText = numeroAbono.toLocaleString("es-CO");
+
+			inputAbono.parentNode.appendChild(txtAbono);
+			inputAbono.classList.add("no-print");
+		}
+
+		// 3. CORRECCIÓN DEL SALDO (Asegura que siempre se imprima con puntos)
+		const displaySaldo = document.getElementById("display-saldo");
+		if (displaySaldo) {
+			// Extraemos el texto del saldo, le quitamos cualquier punto viejo y lo volvemos a formatear limpio
+			const valorSaldoPuro =
+				parseFloat(displaySaldo.innerText.replace(/\./g, "")) || 0;
+			displaySaldo.innerText = valorSaldoPuro.toLocaleString("es-CO");
+		}
+
+		// 4. CORRECCIÓN DEL TOTAL (Por seguridad, forzamos formato limpio)
+		const displayTotal = document.getElementById("display-total");
+		if (displayTotal) {
+			const valorTotalPuro =
+				parseFloat(displayTotal.innerText.replace(/\./g, "")) || 0;
+			displayTotal.innerText = valorTotalPuro.toLocaleString("es-CO");
+		}
 
 		setTimeout(() => {
 			window.print();
 
-			// Limpieza estándar del formulario
+			// Restauración del estado de la pantalla
+			const tempAbonoTxt = document.querySelector(".print-abono-text");
+			if (tempAbonoTxt) tempAbonoTxt.remove();
+			if (inputAbono) inputAbono.classList.remove("no-print");
+
+			// Limpieza estándar del formulario post-impresión
 			const formTicket = document.getElementById("form-ticket");
 			if (formTicket) formTicket.reset();
+
 			const tbody = document.querySelector("#tabla-pedidos tbody");
 			if (tbody) tbody.innerHTML = "";
+
 			window.agregarFila();
 			recalcular();
 			actualizarConsecutivo();
+
 			const fechaAuto = document.getElementById("fecha-auto");
 			if (fechaAuto) fechaAuto.valueAsDate = new Date();
+
 			window.buscarOrdenes();
 			console.log("Proceso de impresión finalizado.");
 		}, 500);
@@ -120,7 +200,14 @@ window.buscarOrdenes = () => {
 		vistos.add(orden.ordenNo);
 		const card = document.createElement("div");
 		card.className = "search-item-card";
-		card.innerHTML = `<div class="search-item-info"><p>Orden No. ${orden.ordenNo} — <b>${orden.clienteNom}</b></p></div><div class="search-item-status">Saldo: $${orden.saldoVal}</div>`;
+		card.innerHTML = `
+            <div class="search-item-info">
+                <p>Orden No. ${orden.ordenNo} — <span class="client-tag">${orden.clienteNom}</span></p>
+            </div>
+            <div class="search-item-status">
+                <span class="balance-tag">Saldo: $${orden.saldoVal}</span>
+            </div>
+        `;
 		card.onclick = () => cargarOrden(orden.id);
 		contenedor.appendChild(card);
 	});
@@ -149,9 +236,10 @@ function recalcular() {
 	const displayTotal = document.getElementById("display-total");
 	const displaySaldo = document.getElementById("display-saldo");
 
-	if (displayTotal) displayTotal.innerText = totalGeneral.toLocaleString();
+	if (displayTotal)
+		displayTotal.innerText = totalGeneral.toLocaleString("es-CO");
 	if (displaySaldo)
-		displaySaldo.innerText = (totalGeneral - abono).toLocaleString();
+		displaySaldo.innerText = (totalGeneral - abono).toLocaleString("es-CO");
 }
 
 function calcularAlertaFecha() {
@@ -251,7 +339,12 @@ function cargarOrden(id) {
 		tbody.innerHTML = "";
 		orden.prendas.forEach((p) => {
 			const tr = document.createElement("tr");
-			tr.innerHTML = `<td><input type="number" class="c-cant" value="${p.cant}"></td><td><input type="text" class="c-desc" value="${p.desc}"></td><td><input type="number" class="c-unit" value="${p.unit}"></td><td><input type="number" class="c-total" value="${p.total}" readonly></td>`;
+			tr.innerHTML = `
+                <td class="col-cant"><input type="number" class="c-cant col-cant-input" value="${p.cant}"></td>
+                <td class="col-desc"><input type="text" class="c-desc" value="${p.desc}"></td>
+                <td class="col-unit"><input type="number" class="c-unit col-unit-input" value="${p.unit}"></td>
+                <td class="col-total"><input type="number" class="c-total col-total-input" value="${p.total}" readonly></td>
+            `;
 			tbody.appendChild(tr);
 		});
 	}
