@@ -58,7 +58,7 @@
                     <input type="text" id="cliente-cel" placeholder="Número">
                 </div>
                 
-                <div class="field full-width">
+                <div class="field full-width no-print">
                     <label>FECHA DE ENTREGA (ALERTA DE TIEMPO):</label>
                     <input type="date" id="fecha-entrega">
                 </div>
@@ -68,13 +68,14 @@
                 <table id="tabla-pedidos">
                     <thead>
                         <tr>
-                            <th>CANT.</th>
-                            <th>DESCRIPCIÓN</th>
-                            <th>VALOR UNIT.</th>
-                            <th>TOTAL</th>
+                            <th class="col-cant">CANT.</th>
+                            <th class="col-desc">DESCRIPCIÓN</th>
+                            <th class="col-unit">VR. UNITAR.</th>
+                            <th class="col-total">VR. TOTAL</th>
                         </tr>
                     </thead>
                     <tbody>
+                        <!-- Las filas se agregan dinámicamente con JS -->
                     </tbody>
                 </table>
                 <button type="button" onclick="agregarFila()" class="btn-add no-print">+ Agregar Prenda/Artículo</button>
@@ -83,7 +84,8 @@
             <div class="resumen-container">
                 <div class="resumen-item">
                     <label>ABONO $</label>
-                    <input type="number" id="abono-val" value="0">
+                    <input type="number" id="abono-val" class="no-print" value="0">
+                    <span id="display-abono" class="print-only-text"></span>
                 </div>
                 <div class="resumen-item">
                     <label>SALDO $</label>
@@ -93,6 +95,11 @@
                     <label>TOTAL $</label>
                     <span id="display-total">0</span>
                 </div>
+            </div>
+
+            <!-- PIE DE PÁGINA: Nota legal del talonario original físico -->
+            <div class="print-footer">
+                <p>PARA RETIRAR PRESENTE ESTA ORDEN DE PEDIDO - PASADOS 30 DÍAS NO SE RESPONDE POR SUS ARTÍCULOS</p>
             </div>
 
             <div class="print-section no-print">
