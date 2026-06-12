@@ -38,29 +38,37 @@
         <form id="form-ticket">
             <div class="client-grid">
                 <div class="field">
-                    <label>No. ORDEN:</label>
-                    <input type="text" id="orden-no" class="input-important" value="0001">
+                    <label class="no-print">No. ORDEN:</label>
+                    <input type="text" id="orden-no" class="input-important no-print" value="0001" readonly>
+                    <div class="print-only-block font-bold-print">ORDEN No. <span id="print-orden-txt"></span></div>
                 </div>
                 <div class="field">
-                    <label>FECHA REGISTRO:</label>
-                    <input type="date" id="fecha-auto">
+                    <label class="no-print">FECHA REGISTRO:</label>
+                    <input type="date" id="fecha-auto" class="no-print">
+                    <div class="print-only-block">FECHA REGISTRO: <span id="print-registro-txt"></span></div>
                 </div>
                 <div class="field full-width">
-                    <label>CLIENTE:</label>
-                    <input type="text" id="cliente-nom" placeholder="Nombre del cliente">
+                    <label class="no-print">CLIENTE:</label>
+                    <input type="text" id="cliente-nom" placeholder="Nombre del cliente" class="no-print">
+                    <div class="print-only-block"><strong>CLIENTE:</strong> <span id="print-cliente-txt"></span></div>
                 </div>
                 <div class="field">
-                    <label>DIRECCIÓN:</label>
-                    <input type="text" id="cliente-dir" placeholder="Dirección">
+                    <label class="no-print">DIRECCIÓN:</label>
+                    <input type="text" id="cliente-dir" placeholder="Dirección" class="no-print">
+                    <div class="print-only-block"><strong>DIRECCIÓN:</strong> <span id="print-dir-txt"></span></div>
                 </div>
                 <div class="field">
-                    <label>CELULAR:</label>
-                    <input type="text" id="cliente-cel" placeholder="Número">
+                    <label class="no-print">CELULAR:</label>
+                    <input type="text" id="cliente-cel" placeholder="Número" class="no-print">
+                    <div class="print-only-block"><strong>CELULAR:</strong> <span id="print-cel-txt"></span></div>
                 </div>
                 
-                <div class="field full-width no-print">
-                    <label>FECHA DE ENTREGA (ALERTA DE TIEMPO):</label>
-                    <input type="date" id="fecha-entrega">
+                <div class="field full-width">
+                    <label class="no-print">FECHA DE ENTREGA (ALERTA DE TIEMPO):</label>
+                    <input type="date" id="fecha-entrega" class="no-print">
+                    <div class="print-only-block font-bold-print highlighted-print-box">
+                        FECHA DE ENTREGA: <span id="print-entrega-txt"></span>
+                    </div>
                 </div>
             </div>
 
@@ -68,14 +76,13 @@
                 <table id="tabla-pedidos">
                     <thead>
                         <tr>
-                            <th class="col-cant">CANT.</th>
-                            <th class="col-desc">DESCRIPCIÓN</th>
-                            <th class="col-unit">VR. UNITAR.</th>
-                            <th class="col-total">VR. TOTAL</th>
+                            <th style="width: 12%;">CANT.</th>
+                            <th>DESCRIPCIÓN</th>
+                            <th style="width: 22%;">V. UNIT.</th>
+                            <th style="width: 22%;">TOTAL</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <!-- Las filas se agregan dinámicamente con JS -->
                     </tbody>
                 </table>
                 <button type="button" onclick="agregarFila()" class="btn-add no-print">+ Agregar Prenda/Artículo</button>
@@ -83,9 +90,9 @@
 
             <div class="resumen-container">
                 <div class="resumen-item">
-                    <label>ABONO $</label>
-                    <input type="number" id="abono-val" class="no-print" value="0">
-                    <span id="display-abono" class="print-only-text"></span>
+                    <label class="no-print">ABONO $</label>
+                    <input type="number" id="abono-val" value="0" class="no-print">
+                    <div class="print-only-block"><label>ABONO $</label><span id="print-abono-txt">0</span></div>
                 </div>
                 <div class="resumen-item">
                     <label>SALDO $</label>
@@ -97,15 +104,16 @@
                 </div>
             </div>
 
-            <!-- PIE DE PÁGINA: Nota legal del talonario original físico -->
-            <div class="print-footer">
-                <p>PARA RETIRAR PRESENTE ESTA ORDEN DE PEDIDO - PASADOS 30 DÍAS NO SE RESPONDE POR SUS ARTÍCULOS</p>
-            </div>
-
             <div class="print-section no-print">
                 <button type="button" onclick="generarEImprimir()" class="btn-print">GENERAR E IMPRIMIR RECIBO</button>
             </div>
         </form>
+
+        <footer class="ticket-footer">
+            <p class="separator-line">---------------------------------------------------------</p>
+            <p class="footer-legal">PARA RETIRAR PRESENTE ESTA ORDEN DE PEDIDO - PASADOS 30 DÍAS NO SE RESPONDE POR SUS ARTÍCULOS</p>
+            <p class="footer-legal" style="margin-top: 5px;">Garantía: 15 días - pasados los 15 días pierde la garantía del trabajo realizado a su(s) prenda(s)</p>
+        </footer>
 
         <div id="seccion-busqueda" class="search-container no-print">
             <hr class="separator">
