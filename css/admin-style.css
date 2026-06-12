@@ -10,14 +10,13 @@ body {
     background: #2d1a2d;
 }
 
-/* Selector específico para asegurar el ocultamiento correcto sin usar !important */
 body .hidden, 
 section.hidden,
 #admin-panel.hidden {
-    display: none;
+    display: none !important;
 }
 
-/* INTERFAZ DE LOGEO (ACCESO) */
+/* INTERFAZ DE LOGEO */
 .login-container {
     display: flex;
     justify-content: center;
@@ -33,7 +32,6 @@ section.hidden,
     width: 320px;
 }
 
-/* Nuevos estilos para el contenedor de contraseña */
 .password-wrapper {
     position: relative;
     width: 90%;
@@ -43,8 +41,7 @@ section.hidden,
 .password-wrapper input {
     width: 100%;
     padding: 10px;
-    padding-right: 40px; /* Espacio para el icono */
-    margin: 0;
+    padding-right: 40px;
     border: 1px solid #ccc;
     border-radius: 5px;
     box-sizing: border-box;
@@ -71,7 +68,7 @@ section.hidden,
     margin-top: 10px;
 }
 
-/* MAQUETACIÓN DEL PANEL DE ADMINISTRACIÓN */
+/* MAQUETACIÓN DEL PANEL */
 .admin-panel {
     max-width: 600px;
     margin: 20px auto;
@@ -104,12 +101,6 @@ section.hidden,
     margin: 5px 0;
 }
 
-.panel-header h3 {
-    font-size: 14px;
-    margin: 2px 0;
-    color: var(--vino);
-}
-
 .info-text {
     font-size: 11px;
     margin: 2px 0;
@@ -133,7 +124,7 @@ section.hidden,
     margin-top: 10px;
 }
 
-/* CUADRÍCULA DE DATOS DEL CLIENTE */
+/* CUADRÍCULA DE DATOS */
 .client-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -171,7 +162,7 @@ section.hidden,
     font-size: 16px;
 }
 
-/* TABLA DINÁMICA DE PRENDAS */
+/* TABLA DINÁMICA */
 table {
     width: 100%;
     border-collapse: collapse;
@@ -183,6 +174,7 @@ th {
     background: var(--vino);
     color: white;
     padding: 8px;
+    font-size: 11px;
 }
 
 td {
@@ -194,6 +186,7 @@ td input {
     width: 95%;
     border: 1px solid #ddd;
     padding: 4px;
+    box-sizing: border-box;
 }
 
 .btn-add {
@@ -208,7 +201,7 @@ td input {
     font-size: 12px;
 }
 
-/* RESUMEN DE SALDOS Y TOTALES */
+/* RESUMEN DE SALDOS */
 .resumen-container {
     border: 2px solid var(--vino);
     border-radius: 8px;
@@ -238,11 +231,6 @@ td input {
     color: var(--vino);
 }
 
-/* BOTONES OPERATIVOS */
-.print-section {
-    margin-top: 20px;
-}
-
 .btn-print {
     width: 100%;
     padding: 18px;
@@ -255,7 +243,7 @@ td input {
     cursor: pointer;
 }
 
-/* ESTILOS DE ALERTA DINÁMICA DE PANTALLA */
+/* ALERTAS EN PANTALLA */
 .client-grid .field input[type="date"]#fecha-entrega.alerta-verde {
     background: #4caf50;
     color: #ffffff;
@@ -264,7 +252,6 @@ td input {
     padding: 5px;
     font-weight: bold;
 }
-
 .client-grid .field input[type="date"]#fecha-entrega.alerta-amarillo {
     background: #ffeb3b;
     color: #000000;
@@ -273,7 +260,6 @@ td input {
     padding: 5px;
     font-weight: bold;
 }
-
 .client-grid .field input[type="date"]#fecha-entrega.alerta-rojo {
     background: #f44336;
     color: #ffffff;
@@ -283,306 +269,112 @@ td input {
     font-weight: bold;
 }
 
-/* ESTILOS DE LA SECCIÓN DE BÚSQUEDA HISTÓRICA */
-.search-container {
-    margin-top: 30px;
-    padding-top: 10px;
-}
+/* BÚSQUEDA HISTÓRICA */
+.search-container { margin-top: 30px; padding-top: 10px; }
+.separator { border: 0; border-top: 2px dashed #ccc; margin-bottom: 20px; }
+.search-container h2 { font-size: 16px; color: var(--vino); margin-bottom: 12px; }
+.search-box input { width: 96%; padding: 10px; border: 1px solid #ccc; border-radius: 6px; font-size: 13px; margin-bottom: 15px; }
+.results-container { max-height: 250px; overflow-y: auto; }
+.search-item-card { background: #fdfdfd; border: 1px solid #e2e8f0; border-radius: 6px; padding: 10px; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; }
+.search-item-info p { margin: 2px 0; font-size: 12px; }
+.search-item-status { text-align: right; font-weight: bold; color: var(--vino); font-size: 13px; }
 
-.separator {
-    border: 0;
-    border-top: 2px dashed #ccc;
-    margin-bottom: 20px;
-}
-
-.search-container h2 {
-    font-size: 16px;
-    color: var(--vino);
-    margin-bottom: 12px;
-}
-
-.search-box input {
-    width: 96%;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 6px;
-    font-size: 13px;
-    margin-bottom: 15px;
-}
-
-.results-container {
-    max-height: 250px;
-    overflow-y: auto;
-}
-
-.search-item-card {
-    background: #fdfdfd;
-    border: 1px solid #e2e8f0;
-    border-radius: 6px;
-    padding: 10px;
-    margin-bottom: 8px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    cursor: pointer;
-    transition: background 0.2s;
-}
-
-.search-item-card:hover {
-    background: #f5f5f5;
-}
-
-.search-item-info p {
-    margin: 2px 0;
-    font-size: 12px;
-}
-
-.search-item-info .order-tag {
-    color: #d90429;
-    font-weight: bold;
-}
-
-.search-item-info .client-tag {
-    font-weight: bold;
-    color: #1e293b;
-}
-
-.search-item-status {
-    text-align: right;
-}
-
-.search-item-status .balance-tag {
-    font-size: 13px;
-    font-weight: bold;
-    color: var(--vino);
-    display: block;
-}
-
-.search-item-status .date-tag {
-    font-size: 11px;
-    color: #64748b;
-}
-
-/* Ocultar el pie de página legal en la pantalla del computador */
-.print-footer {
+/* VISIBILIDAD DE IMPRESIÓN INTERNA */
+.print-only-block, .print-text-cell {
     display: none;
 }
 
+/* PIE DE PÁGINA REQUERIDO */
+.ticket-footer {
+    text-align: center;
+    margin-top: 15px;
+    font-family: sans-serif;
+}
+.separator-line {
+    margin: 5px 0;
+    letter-spacing: 2px;
+}
+.footer-legal {
+    font-size: 11px;
+    font-weight: bold;
+    color: #000;
+    line-height: 1.4;
+    margin: 5px 0 0 0;
+}
+
 /* ======================================================== */
-/* MEDIA QUERY: OPTIMIZACIÓN UTILIZANDO ALTA ESPECIFICIDAD */
+/* CONFIGURACIÓN EXCLUSIVA PARA EL TICKET IMPRESO */
 /* ======================================================== */
 @media print {
     @page {
-        size: portrait;
-        margin: 15mm;
+        size: 5.5in 8.5in;
+        margin: 0.4cm;
     }
 
-    /* Usamos el encadenamiento 'html body' para ganar jerarquía naturalmente */
-    html body {
+    body {
         background: white;
-        font-family: 'Helvetica Neue', Arial, sans-serif;
         color: #000000;
-        -webkit-print-color-adjust: exact;
-        print-color-adjust: exact;
     }
 
-    /* Ocultar elementos sin usar !important */
-    html body .no-print,
-    html body .login-container,
-    html body #admin-login,
-    html body .search-container,
-    html body #seccion-busqueda,
-    html body .btn-add,
-    html body .btn-logout,
-    html body .print-section {
-        display: none;
+    .no-print,
+    .search-container,
+    #seccion-busqueda,
+    .btn-add,
+    .btn-logout,
+    table tbody tr td input {
+        display: none !important;
     }
 
-    /* Ajuste del contenedor principal en papel */
-    html body .admin-panel {
+    /* Mostrar texto formateado dentro de las celdas */
+    .print-text-cell {
+        display: block !important;
+        font-size: 13px;
+        color: #000000;
+        word-break: break-word;
+    }
+
+    .admin-panel {
         max-width: 100%;
-        width: 100%;
         margin: 0;
         padding: 0;
         box-shadow: none;
         border: none;
-    }
-
-    /* Encabezado en Negro Sólido */
-    html body .panel-header {
-        border-bottom: 3px double #000000;
-        padding-bottom: 12px;
-        margin-bottom: 25px;
-    }
-
-    html body .panel-header h1 {
-        font-size: 24px;
-        font-weight: 900;
-        color: #000000;
-        letter-spacing: 1px;
-    }
-
-    html body .slogan, 
-    html body .info-text, 
-    html body .highlight-text {
-        color: #000000;
-        font-size: 13px;
-        font-weight: bold;
-    }
-
-    /* Cuadrícula de Datos del Cliente */
-    html body .client-grid {
-        gap: 15px;
-        margin-bottom: 30px;
-    }
-
-    html body .field label {
-        font-size: 12px;
-        font-weight: 900;
-        color: #000000;
-        text-transform: uppercase;
-    }
-
-    html body .client-grid .field input {
-        border: none;
-        border-bottom: 2px solid #000000;
-        font-size: 15px;
-        font-weight: bold;
-        color: #000000;
-        padding: 4px 0;
-        background: transparent;
-    }
-
-    html body .client-grid .field .input-important {
-        font-size: 22px;
-        color: #000000;
-        font-weight: 900;
-    }
-
-    /* Estructura de la Tabla de Pedidos */
-    html body table {
-        width: 100%;
-        border-collapse: collapse;
-        margin-top: 20px;
-    }
-
-    html body th {
-        background: #000000;
-        color: #ffffff;
-        font-size: 13px;
-        font-weight: 900;
-        padding: 10px 6px;
-        border: 2px solid #000000;
-        text-transform: uppercase;
-    }
-
-    html body td {
-        border: 2px solid #000000;
-        padding: 12px 6px;
-        vertical-align: middle;
-        background: transparent;
-    }
-
-    /* Anchos fijos y alineaciones perfectas para imitar el talonario */
-    html body .col-cant { 
-        width: 10%; 
-        text-align: center; 
-    }
-    html body .col-desc { 
-        width: 55%; 
-        text-align: left; 
-    }
-    html body .col-unit { 
-        width: 17%; 
-        text-align: right; 
-        padding-right: 10px; 
-    }
-    html body .col-total { 
-        width: 18%; 
-        text-align: right; 
-        padding-right: 10px; 
-    }
-
-    /* Alineación de los textos dinámicos planos en el papel */
-    html body table td .print-only-text.print-cant-text {
-        text-align: center;
         display: block;
     }
-    html body table td .print-only-text.print-desc-text {
-        text-align: left;
-        display: block;
-    }
-    html body table td .print-only-text.print-unit-text,
-    html body table td .print-only-text.print-total-text {
-        text-align: right;
-        display: block;
-        width: 100%;
-    }
 
-    /* Ocultar inputs nativos dentro de las celdas impresas */
-    html body table td input {
-        display: none;
-    }
-
-    /* Contenedor de Resumen y Saldos */
-    html body .resumen-container {
-        border: 2px solid #000000;
-        border-radius: 0;
-        margin: 30px 0;
-        padding: 15px;
-        background: transparent;
-    }
-
-    html body .resumen-item label {
-        color: #000000;
-        font-size: 13px;
-        font-weight: 900;
-    }
-
-    html body .resumen-item input {
-        border: none;
-        font-size: 18px;
-        font-weight: 900;
-        color: #000000;
-        text-align: center;
-        background: transparent;
-        width: 100px;
-    }
-
-    html body .resumen-item span {
-        font-size: 18px;
-        font-weight: 900;
+    .print-only-block {
+        display: block !important;
+        font-size: 14px;
+        margin: 4px 0;
         color: #000000;
     }
 
-    /* Limpieza total de colores de alerta en el input de entrega */
-    html body .client-grid .field input[type="date"]#fecha-entrega,
-    html body .client-grid .field input[type="date"]#fecha-entrega.alerta-verde,
-    html body .client-grid .field input[type="date"]#fecha-entrega.alerta-amarillo,
-    html body .client-grid .field input[type="date"]#fecha-entrega.alerta-rojo {
-        background: transparent;
-        color: #000000;
-        border: none;
-        border-bottom: 2px solid #000000;
-        border-radius: 0;
-        padding: 4px 0;
-        font-weight: bold;
+    .font-bold-print {
+        font-weight: bold !important;
+        font-size: 16px !important;
     }
 
-    /* Pie de página legal (Mensaje de los 30 días) */
-    html body .print-footer {
-        display: block;
-        margin-top: 40px;
-        padding-top: 15px;
-        border-top: 2px dashed #000000;
-        text-align: center;
+    .highlighted-print-box {
+        border: 1px solid #000;
+        padding: 5px;
+        margin-top: 5px;
+        background-color: transparent !important;
     }
 
-    html body .print-footer p {
-        font-size: 12px;
-        font-weight: 900;
-        color: #000000;
-        margin: 0;
-        letter-spacing: 0.5px;
+    .resumen-container {
+        border: 1px solid #000;
+    }
+
+    .resumen-item span {
+        color: #000000 !important;
+    }
+
+    .ticket-footer {
+        display: block !important;
+    }
+
+    * {
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
     }
 }
