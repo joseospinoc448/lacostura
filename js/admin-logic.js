@@ -51,7 +51,7 @@ window.agregarFila = () => {
 	if (!tbody) return;
 	const tr = document.createElement("tr");
 
-	// Añadimos clases combinadas de input (para pantalla) y spans (para impresión con puntos)
+	// v-unit y c-total ahora son type="text" para permitir la visualización de puntos en vivo
 	tr.innerHTML = `
         <td>
             <input type="number" class="c-cant" value="1">
@@ -62,11 +62,11 @@ window.agregarFila = () => {
             <span class="print-text-cell p-desc-txt"></span>
         </td>
         <td>
-            <input type="number" class="c-unit" value="0">
+            <input type="text" class="c-unit" value="0">
             <span class="print-text-cell p-unit-txt">0</span>
         </td>
         <td>
-            <input type="number" class="c-total" value="0" readonly>
+            <input type="text" class="c-total" value="0" readonly>
             <span class="print-text-cell p-total-txt">0</span>
         </td>
     `;
@@ -105,23 +105,27 @@ window.generarEImprimir = () => {
 	document.getElementById("print-cel-txt").innerText =
 		document.getElementById("cliente-cel").value || "---";
 
-	// 2. Formatear abono con puntos en el ticket
+	// 2. Formatear abono con puntos en el ticket impreso
 	const abonoVal = document.getElementById("abono-val").value || "0";
 	document.getElementById("print-abono-txt").innerText =
-		parseFloat(abonoVal).toLocaleString();
+		parseFloat(abonoVal).toLocaleString("es-CO");
 
-	// 3. PASO CLAVE: Mapear y formatear dinámicamente cada celda de la tabla antes de abrir el spooler
+	// 3. Mapear y formatear dinámicamente cada celda de la tabla para el spooler de impresión
 	document.querySelectorAll("#tabla-pedidos tbody tr").forEach((tr) => {
 		const cantVal = tr.querySelector(".c-cant").value || "0";
 		const descVal = tr.querySelector(".c-desc").value || "---";
-		const unitVal = parseFloat(tr.querySelector(".c-unit").value) || 0;
-		const totalVal = parseFloat(tr.querySelector(".c-total").value) || 0;
 
-		// Inyectar en los elementos de impresión con formato de miles colombiano
+		const unitRaw = tr.querySelector(".c-unit").value || "0";
+		const unitVal = parseFloat(unitRaw.replace(/\./g, "")) || 0;
+
+		const totalRaw = tr.querySelector(".c-total").value || "0";
+		const totalVal = parseFloat(totalRaw.replace(/\./g, "")) || 0;
+
 		tr.querySelector(".p-cant-txt").innerText = cantVal;
 		tr.querySelector(".p-desc-txt").innerText = descVal;
-		tr.querySelector(".p-unit-txt").innerText = unitVal.toLocaleString();
-		tr.querySelector(".p-total-txt").innerText = totalVal.toLocaleString();
+		tr.querySelector(".p-unit-txt").innerText = unitVal.toLocaleString("es-CO");
+		tr.querySelector(".p-total-txt").innerText =
+			totalVal.toLocaleString("es-CO");
 	});
 
 	if (guardarOrdenEnHistorial()) {
@@ -164,8 +168,10 @@ window.buscarOrdenes = () => {
 	if (query === "") return;
 
 	const historial = JSON.parse(localStorage.getItem("historial_costura")) || [];
-	const filtrados = historial.filter((orden) =>
-		orden.clienteNom.toLowerCase().includes(query),
+	const filtrados = historial.filter(
+		(orden) =>
+			orden.clienteNom.toLowerCase().includes(query) ||
+			orden.ordenNo.toLowerCase().includes(query),
 	);
 
 	const vistos = new Set();
@@ -174,7 +180,15 @@ window.buscarOrdenes = () => {
 		vistos.add(orden.ordenNo);
 		const card = document.createElement("div");
 		card.className = "search-item-card";
-		card.innerHTML = `<div class="search-item-info"><p>Orden No. ${orden.ordenNo} — <b>${orden.clienteNom}</b></p></div><div class="search-item-status">Saldo: $${orden.saldoVal}</div>`;
+
+		// Aseguramos que el saldo en el historial de búsqueda muestre los puntos
+		const saldoFormateado = orden.saldoVal.includes(".")
+			? orden.saldoVal
+			: parseFloat(orden.saldoVal.replace(/\D/g, "") || 0).toLocaleString(
+					"es-CO",
+				);
+
+		card.innerHTML = `<div class="search-item-info"><p>Orden No. ${orden.ordenNo} — <b>${orden.clienteNom}</b></p></div><div class="search-item-status">Saldo: $${saldoFormateado}</div>`;
 		card.onclick = () => cargarOrden(orden.id);
 		contenedor.appendChild(card);
 	});
@@ -183,29 +197,51 @@ window.buscarOrdenes = () => {
 // --- LÓGICA INTERNA ---
 
 function vincularCalculos() {
-	document
-		.querySelectorAll(".c-cant, .c-unit, #abono-val")
-		.forEach((input) => (input.oninput = recalcular));
+	// Escucha la escritura en los precios unitarios y les da formato de miles en tiempo real
+	document.querySelectorAll(".c-unit").forEach((input) => {
+		input.oninput = function () {
+			let valorLimpio = this.value.replace(/\D/g, "");
+			if (valorLimpio !== "") {
+				this.value = parseFloat(valorLimpio).toLocaleString("es-CO");
+			} else {
+				this.value = "0";
+			}
+			recalcular();
+		};
+	});
+
+	// Vincular cambios automáticos en cantidad y abono
+	document.querySelectorAll(".c-cant, #abono-val").forEach((input) => {
+		input.oninput = recalcular;
+	});
 }
 
 function recalcular() {
 	let totalGeneral = 0;
 	document.querySelectorAll("#tabla-pedidos tbody tr").forEach((tr) => {
 		const cant = parseFloat(tr.querySelector(".c-cant").value) || 0;
-		const unit = parseFloat(tr.querySelector(".c-unit").value) || 0;
+
+		// Se limpian los puntos del texto para poder multiplicar matemáticamente
+		const unitRaw = tr.querySelector(".c-unit").value || "0";
+		const unit = parseFloat(unitRaw.replace(/\./g, "")) || 0;
+
 		const sub = cant * unit;
-		tr.querySelector(".c-total").value = sub;
+
+		// Se reinyectan los puntos de miles en la casilla de subtotal
+		tr.querySelector(".c-total").value = sub.toLocaleString("es-CO");
 		totalGeneral += sub;
 	});
+
 	const abonoInput = document.getElementById("abono-val");
 	const abono = abonoInput ? parseFloat(abonoInput.value) || 0 : 0;
 
 	const displayTotal = document.getElementById("display-total");
 	const displaySaldo = document.getElementById("display-saldo");
 
-	if (displayTotal) displayTotal.innerText = totalGeneral.toLocaleString();
+	if (displayTotal)
+		displayTotal.innerText = totalGeneral.toLocaleString("es-CO");
 	if (displaySaldo)
-		displaySaldo.innerText = (totalGeneral - abono).toLocaleString();
+		displaySaldo.innerText = (totalGeneral - abono).toLocaleString("es-CO");
 }
 
 function calcularAlertaFecha() {
@@ -258,13 +294,17 @@ function guardarOrdenEnHistorial() {
 	const prendas = [];
 	document.querySelectorAll("#tabla-pedidos tbody tr").forEach((tr) => {
 		const desc = tr.querySelector(".c-desc").value.trim();
-		if (desc)
+		if (desc) {
+			const unitRaw = tr.querySelector(".c-unit").value || "0";
+			const totalRaw = tr.querySelector(".c-total").value || "0";
+
 			prendas.push({
 				cant: tr.querySelector(".c-cant").value,
 				desc,
-				unit: tr.querySelector(".c-unit").value,
-				total: tr.querySelector(".c-total").value,
+				unit: unitRaw.replace(/\./g, ""), // Guardamos limpio en almacenamiento
+				total: totalRaw.replace(/\./g, ""),
 			});
+		}
 	});
 
 	const nuevaOrden = {
@@ -305,6 +345,11 @@ function cargarOrden(id) {
 		tbody.innerHTML = "";
 		orden.prendas.forEach((p) => {
 			const tr = document.createElement("tr");
+
+			// Re-formateamos los campos guardados con puntos de miles al renderizarlos en pantalla
+			const unitFormateado = parseFloat(p.unit).toLocaleString("es-CO");
+			const totalFormateado = parseFloat(p.total).toLocaleString("es-CO");
+
 			tr.innerHTML = `
                 <td>
                     <input type="number" class="c-cant" value="${p.cant}">
@@ -315,12 +360,12 @@ function cargarOrden(id) {
                     <span class="print-text-cell p-desc-txt">${p.desc}</span>
                 </td>
                 <td>
-                    <input type="number" class="c-unit" value="${p.unit}">
-                    <span class="print-text-cell p-unit-txt">${parseFloat(p.unit).toLocaleString()}</span>
+                    <input type="text" class="c-unit" value="${unitFormateado}">
+                    <span class="print-text-cell p-unit-txt">${unitFormateado}</span>
                 </td>
                 <td>
-                    <input type="number" class="c-total" value="${p.total}" readonly>
-                    <span class="print-text-cell p-total-txt">${parseFloat(p.total).toLocaleString()}</span>
+                    <input type="text" class="c-total" value="${totalFormateado}" readonly>
+                    <span class="print-text-cell p-total-txt">${totalFormateado}</span>
                 </td>
             `;
 			tbody.appendChild(tr);
