@@ -1,3 +1,6 @@
+/* ==========================================================================
+   1. VARIABLES Y CONFIGURACIÓN GLOBAL
+   ========================================================================== */
 :root {
     --primary: #00a8cc;
     --dark: #0f172a;
@@ -25,11 +28,17 @@ body {
     line-height: 1.6;
 }
 
+/* ==========================================================================
+   2. MAQUETACIÓN Y BLOQUES REUTILIZABLES
+   ========================================================================== */
 .container {
     max-width: 1100px;
     margin: 0 auto;
     padding: 0 20px;
-   
+}
+
+.container h2 {
+    text-align: center;
 }
 
 .section {
@@ -38,9 +47,9 @@ body {
 
 .bg-alt {
     background: #f1f5f9;
-    
 }
-.bg-alt button{
+
+.bg-alt button {
     text-align: center;
 }
 
@@ -49,29 +58,16 @@ body {
     margin-bottom: 40px;
     font-weight: 800;
     font-size: 1.6rem;
-    
 }
 
-/* Estilo unificado para el texto de invitación */
-.visitanos {
-    color: #475569;
-    padding: 10px;
-    text-align: center;
-    font-size: 1.1rem;
-    max-width: 800px;
-    margin: 0 auto 20px;
+/* Ocultar elementos universalmente */
+.hidden {
+    display: none !important;
 }
 
-#visitanos {
-    font-size: 1.3rem;
-    padding: 2px;
-}
-
-.container h2 {
-    text-align: center;
-}
-
-/* --- COMPONENTES REUTILIZABLES --- */
+/* ==========================================================================
+   3. BOTONES Y ELEMENTOS FLOTANTES
+   ========================================================================== */
 .btn {
     padding: 12px 25px;
     border-radius: 8px;
@@ -87,6 +83,7 @@ body {
     background-color: var(--accent);
     color: white;
 }
+
 .btn-ws:hover {
     background-color: #1eb956;
     transform: translateY(-2px);
@@ -96,6 +93,7 @@ body {
     background: white;
     color: var(--dark);
 }
+
 .btn-light:hover {
     background: #e2e8f0;
 }
@@ -122,7 +120,9 @@ body {
     transform: scale(1.1);
 }
 
-/* --- NAVEGACIÓN Y PROMO --- */
+/* ==========================================================================
+   4. BARRA DE PROMO, HEADER Y NAVEGACIÓN
+   ========================================================================== */
 .promo-bar {
     background: var(--yellow);
     text-align: center;
@@ -132,18 +132,17 @@ body {
     top: 0;
     z-index: 6000;
     font-size: 0.9rem;
-    
-    
 }
+
 .promo-bar span {
-    color:red;
+    color: red;
     font-weight: bold;
 }
 
 #header {
     position: absolute;
     width: 100%;
-    top: 40px; /* Ajustado por la promo-bar */
+    top: 40px;
     left: 0;
     z-index: 4000;
     padding: 20px 0;
@@ -182,7 +181,6 @@ body {
     display: flex;
     list-style: none;
     gap: 25px;
-    
 }
 
 .nav-menu a {
@@ -199,6 +197,7 @@ body {
 #header.scrolled .nav-menu a {
     color: var(--dark);
 }
+
 #header.scrolled .nav-menu a:hover {
     color: var(--primary);
 }
@@ -225,7 +224,7 @@ body {
 }
 
 .btn-resena {
-    background: #4285F4; /* Azul Google */
+    background: #4285F4;
     color: white !important;
     padding: 8px 15px;
     border-radius: 5px;
@@ -240,7 +239,9 @@ body {
     transform: scale(1.05);
 }
 
-/* --- HERO --- */
+/* ==========================================================================
+   5. SECCIÓN HERO (SECCIÓN PRINCIPAL)
+   ========================================================================== */
 .hero {
     height: 90vh;
     position: relative;
@@ -257,10 +258,8 @@ body {
     left: 0;
     width: 100%;
     height: 100%;
-    background:
-        linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)),
-        url("https://images.unsplash.com/photo-1550537687-c91072c4792d?auto=format&fit=crop&w=1200&q=80")
-            center/cover;
+    background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)),
+                url("https://images.unsplash.com/photo-1550537687-c91072c4792d?auto=format&fit=crop&w=1200&q=80") center/cover;
     z-index: -1;
 }
 
@@ -268,20 +267,14 @@ body {
     font-size: 1.5rem;
     margin-bottom: 20px;
     line-height: 1.3;
-   
-    width: 100%
-  
-  
-    
+    width: 100%;
 }
 
 .hero h1 span {
     color: var(--accent);
     letter-spacing: .5rem;
-     text-transform: uppercase;
-     font-weight: 400;
-    
-
+    text-transform: uppercase;
+    font-weight: 400;
 }
 
 .badge {
@@ -293,21 +286,18 @@ body {
     margin-bottom: 15px;
 }
 
-.cta-group a{
-    
-    margin: 20px 10px 0;   
+.cta-group a {
+    margin: 20px 10px 0;
 }
 
-/* --- SERVICIOS --- */
+/* ==========================================================================
+   6. SECCIÓN SERVICIOS Y COMPARATIVAS
+   ========================================================================== */
 .services-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
     gap: 10px;
 }
-
-
-
-
 
 .service-card {
     background: white;
@@ -316,7 +306,6 @@ body {
     text-align: center;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
     transition: 0.3s;
-   
 }
 
 .service-card:hover {
@@ -328,10 +317,11 @@ body {
     color: var(--primary);
     margin-bottom: 15px;
 }
-.resultados-reales{
+
+.resultados-reales {
     margin-top: 40px;
 }
-/* --- COMPARATIVA ANTES/DESPUÉS --- */
+
 .section-header p {
     text-align: center;
     margin-bottom: 30px;
@@ -372,21 +362,36 @@ body {
     color: var(--dark);
 }
 
-/* --- FAQ --- */
+/* Secciones heredadas obsoletas o unificadas */
+.visitanos {
+    color: #475569;
+    padding: 10px;
+    text-align: center;
+    font-size: 1.1rem;
+    max-width: 800px;
+    margin: 0 auto 20px;
+}
+
+#visitanos {
+    font-size: 1.3rem;
+    padding: 2px;
+}
+
+/* ==========================================================================
+   7. SECCIÓN PREGUNTAS FRECUENTES (FAQ)
+   ========================================================================== */
 .faq-container {
     max-width: 700px;
     margin: 0 auto;
-   
 }
 
 .faq-item {
     border-bottom: 1px solid #e2e8f0;
     margin-bottom: 10px;
-     user-select: none;
+    user-select: none;
 }
 
 .faq-question {
-    
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -394,13 +399,13 @@ body {
     cursor: pointer;
     font-weight: bold;
     transition: background 0.3s;
-    position: relative; /* Necesario para ubicar el ícono */
-    
+    position: relative;
+    user-select: none;
 }
 
-/* Dibujamos el signo MÁS (+) por defecto */
+/* Signo MÁS (+) con Unicode */
 .faq-question::after {
-    content: '\2b'; /* Código Unicode para el signo + */
+    content: '\2b';
     font-family: "Font Awesome 6 Free";
     font-weight: 900;
     font-size: 1.1rem;
@@ -408,9 +413,9 @@ body {
     transition: transform 0.3s ease;
 }
 
-/* Cambiamos a signo MENOS (-) cuando está activo */
+/* Signo MENOS (-) cuando está activo */
 .faq-item.active .faq-question::after {
-    content: '\f068'; /* Código FontAwesome para el signo - */
+    content: '\f068';
     color: var(--dark);
 }
 
@@ -419,65 +424,25 @@ body {
 }
 
 .faq-answer {
-    
     max-height: 0;
     overflow: hidden;
     transition: max-height 0.3s ease-out, padding 0.3s ease;
     padding: 0 15px;
-    
-    
-    
+    user-select: none;
 }
 
 .faq-item.active .faq-answer {
-    max-height: 200px; /* Ajusta según el largo de tus respuestas */
-    padding-bottom: 15px;
-     user-select: none;
-}
-
-.faq-item.active .faq-question i {
-    transform: rotate(360deg); /* Opcional: un pequeño giro */
-     user-select: none;
-}
-.faq-item {
-    border-bottom: 1px solid #e2e8f0;
-    margin-bottom: 10px;
-     user-select: none;
-}
-
-.faq-question {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 15px;
-    cursor: pointer;
-    font-weight: bold;
-    transition: background 0.3s;
-     user-select: none;
-}
-
-.faq-question:hover {
-    background-color: #f8fafc;
-}
-
-.faq-answer {
-    max-height: 0;
-    overflow: hidden;
-    transition: max-height 0.3s ease-out;
-    padding: 0 15px;
-     user-select: none;
-}
-
-.faq-item.active .faq-answer {
-    max-height: 200px; /* Ajusta según el largo de tus respuestas */
+    max-height: 200px;
     padding-bottom: 15px;
 }
 
 .faq-item.active .faq-question i {
-    transform: rotate(360deg); /* Opcional: un pequeño giro */
+    transform: rotate(360deg);
 }
 
-/* --- MAPA --- */
+/* ==========================================================================
+   8. MAPA, HORARIOS Y ACCESOS
+   ========================================================================== */
 .map-grid {
     display: grid;
     grid-template-columns: 1.5fr 1fr;
@@ -490,16 +455,55 @@ body {
     border-radius: 15px;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
 }
-.festivos{
-    color: #d9534f; 
-    font-weight: bold
+
+.festivos {
+    color: #d9534f;
+    font-weight: bold;
 }
+
 .table-input-container {
     margin: 20px 0;
     overflow-x: auto;
 }
 
-/* --- FOOTER --- */
+/* Componentes Administrativos internos */
+.login-box {
+    max-width: 400px;
+    margin: 50px auto;
+    background: white;
+    padding: 30px;
+    border-radius: 12px;
+    text-align: center;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.login-form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-top: 20px;
+    justify-content: center;
+    align-items: center;
+}
+
+.login-form input {
+    padding: 12px;
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    text-align: center;
+    font-size: 1.1rem;
+}
+
+.error-msg {
+    color: #e11d48;
+    font-size: 0.85rem;
+    margin-top: 10px;
+    font-weight: bold;
+}
+
+/* ==========================================================================
+   9. FOOTER Y REDES SOCIALES
+   ========================================================================== */
 .footer {
     background: #020617;
     color: white;
@@ -518,6 +522,7 @@ body {
     margin-bottom: 15px;
     letter-spacing: 1rem;
 }
+
 .social-btns {
     display: flex;
     justify-content: center;
@@ -552,77 +557,15 @@ body {
     font-size: 0.85rem;
 }
 
-.acceso-administrativo{
-    color: #ccc; 
+.acceso-administrativo {
+    color: #ccc;
     text-decoration: none;
-        font-size: 0.9rem;
+    font-size: 0.9rem;
 }
 
-/* --- MEDIA QUERIES --- */
-@media (max-width: 768px) {
-    .hamburger {
-        display: flex;
-    }
-
-    .nav-menu {
-        position: fixed;
-        top: 0;
-        right: -100%;
-        width: 80%;
-        height: 100vh;
-        background: var(--dark);
-        padding: 100px 40px;
-        transition: 0.4s;
-        z-index: 5500;
-    }
-
-    .nav-menu.active {
-        right: 0;
-    }
-    .nav-menu ul {
-        flex-direction: column;
-        gap: 20px;
-    }
-    .nav-menu a {
-        font-size: 1.2rem;
-        color: white !important;
-    }
-
-    .hero h1 {
-        font-size: 2rem;
-    }
-    .map-grid {
-        grid-template-columns: 1fr;
-    }
-    .compare-imgs {
-        justify-content: center;
-    }
-    .img-box1 img,
-    .img-box img {
-        width: 140px;
-        height: 140px;
-    }
-
-    .footer {
-        padding-bottom: 100px;
-       
-    }
-}
-
-/* Animación Hamburguesa */
-.hamburger.active span:nth-child(1) {
-    transform: translateY(8px) rotate(45deg);
-    background: white !important;
-}
-.hamburger.active span:nth-child(2) {
-    opacity: 0;
-}
-.hamburger.active span:nth-child(3) {
-    transform: translateY(-8px) rotate(-45deg);
-    background: white !important;
-}
-
-/* --- WIDGET DE TIEMPOS DE ENTREGA --- */
+/* ==========================================================================
+   10. WIDGET DE TIEMPOS DE ENTREGA
+   ========================================================================== */
 .tiempos-entrega {
     background: white;
     border-left: 5px solid var(--primary);
@@ -677,83 +620,100 @@ body {
     font-size: 0.85rem;
 }
 
-/* Ocultar elementos */
-.hidden {
-    display: none !important;
-    
-}
-
-/* Caja de Login */
-.login-box {
-    max-width: 400px;
-    margin: 50px auto;
-    background: white;
-    padding: 30px;
-    border-radius: 12px;
-    text-align: center;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-    
-}
-
-.login-form {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-    margin-top: 20px;
-   justify-content: center;
-   align-items: center;
-   
-}
-
-.login-form input {
-    padding: 12px;
-    border: 1px solid #cbd5e1;
-    border-radius: 8px;
-    text-align: center;
-    font-size: 1.1rem;
-}
-
-.error-msg {
-    color: #e11d48;
-    font-size: 0.85rem;
-    margin-top: 10px;
-    font-weight: bold;
-}
-
-/* Ajuste para que se vea bien en móviles */
+/* ==========================================================================
+   11. MEDIA QUERIES (ADAPTACIÓN DISPOSITIVOS MÓVILES)
+   ========================================================================== */
 @media (max-width: 768px) {
+    .hamburger {
+        display: flex;
+    }
+
+    .nav-menu {
+        position: fixed;
+        top: 0;
+        right: -100%;
+        width: 80%;
+        height: 100vh;
+        background: var(--dark);
+        padding: 100px 40px;
+        transition: 0.4s;
+        z-index: 5500;
+    }
+
+    .nav-menu.active {
+        right: 0;
+    }
+
+    .nav-menu ul {
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    .nav-menu a {
+        font-size: 1.2rem;
+        color: white !important;
+    }
+
+    .hero h1 {
+        font-size: 2rem;
+    }
+
+    .map-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .compare-imgs {
+        justify-content: center;
+    }
+
+    .img-box1 img,
+    .img-box img {
+        width: 140px;
+        height: 140px;
+    }
+
+    .footer {
+        padding-bottom: 140px; /* Ajuste para evitar que el botón flotante tape elementos */
+    }
+
     .tiempos-entrega {
         padding: 15px;
         text-align: center;
     }
+
     .tiempos-entrega li {
         flex-direction: column;
         gap: 5px;
     }
+
     .tiempos-entrega h4 {
         display: block;
         text-align: center;
     }
 
-    
-}
-
-/* --- AJUSTE PANEL ADMINISTRATIVO EN MÓVIL --- */
-@media (max-width: 768px) {
     .admin-btn-footer {
-        display: block; /* Ocupa todo el ancho disponible */
+        display: block;
         width: 90%;
-        margin: 20px auto 0; /* Centrado y con espacio arriba */
-        padding: 15px; /* Más grande para facilitar el clic */
+        margin: 20px auto 0;
+        padding: 15px;
         font-size: 1rem;
         background-color: rgba(255, 255, 255, 0.05);
         border: 1px solid #475569;
         text-align: center;
     }
+}
 
-    /* Asegura que el footer tenga espacio suficiente al final 
-       para que el botón de WhatsApp no tape el link administrativo */
-    .footer {
-        padding-bottom: 140px; 
-    }
+/* Animaciones del Menú Hamburguesa Activo */
+.hamburger.active span:nth-child(1) {
+    transform: translateY(8px) rotate(45deg);
+    background: white !important;
+}
+
+.hamburger.active span:nth-child(2) {
+    opacity: 0;
+}
+
+.hamburger.active span:nth-child(3) {
+    transform: translateY(-8px) rotate(-45deg);
+    background: white !important;
 }
