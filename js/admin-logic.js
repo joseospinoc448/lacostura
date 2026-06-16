@@ -109,8 +109,9 @@ window.generarEImprimir = () => {
 
 	// 2. Formatear abono con puntos en el ticket impreso
 	const abonoVal = document.getElementById("abono-val").value || "0";
-	document.getElementById("print-abono-txt").innerText =
-		parseFloat(abonoVal).toLocaleString("es-CO");
+	document.getElementById("print-abono-txt").innerText = parseFloat(
+		abonoVal.replace(/\./g, "") || 0,
+	).toLocaleString("es-CO");
 
 	// 3. Mapear y formatear dinámicamente cada celda de la tabla para el spooler de impresión
 	document.querySelectorAll("#tabla-pedidos tbody tr").forEach((tr) => {
@@ -159,6 +160,7 @@ window.generarEImprimir = () => {
 	}
 };
 
+// TRIPLE MOTOR DE BÚSQUEDA AJUSTADO A SU HISTORIAL + COLORES DE ALERTA (INDIFERENTE A MAYÚSCULAS)
 window.buscarOrdenes = () => {
 	const searchInput = document.getElementById("buscar-cliente");
 	if (!searchInput) return;
@@ -171,44 +173,96 @@ window.buscarOrdenes = () => {
 
 	const historial = JSON.parse(localStorage.getItem("historial_costura")) || [];
 
-	// FUNCIONALIDAD AMPLIADA: Buscar por Nombre, No. Orden O Fecha de Entrega
 	const filtrados = historial.filter((orden) => {
-		const porNombre = orden.clienteNom.toLowerCase().includes(query);
-		const porOrden = orden.ordenNo.toLowerCase().includes(query);
+		// Blindaje para evitar que falle si faltan datos en la orden
+		const porNombre = orden.clienteNom
+			? orden.clienteNom.toLowerCase().includes(query)
+			: false;
+		const porOrden = orden.ordenNo
+			? orden.ordenNo.toLowerCase().includes(query)
+			: false;
 
 		let porFecha = false;
 		if (orden.fechaEntrega) {
-			// Formato original almacenado (AAAA-MM-DD)
 			const fechaOriginal = orden.fechaEntrega.toLowerCase();
-
-			// Reconstrucción a formato latino (DD/MM/AAAA) para permitir búsquedas tradicionales
 			const p = orden.fechaEntrega.split("-");
-			const fechaLatina = `${p[2]}/${p[1]}/${p[0]}`.toLowerCase();
-
+			const fechaLatina =
+				p.length === 3 ? `${p[2]}/${p[1]}/${p[0]}`.toLowerCase() : "";
 			porFecha = fechaOriginal.includes(query) || fechaLatina.includes(query);
 		}
 
-		return porNombre || porOrden || porFecha;
+		// FUNCIONALIDAD ADICIONAL CRANEADA: Evaluación del color de alerta en la consulta
+		let porAlerta = false;
+		if (orden.fechaEntrega) {
+			const partes = orden.fechaEntrega.split("-");
+			if (partes.length === 3) {
+				const fEntrega = new Date(partes[0], partes[1] - 1, partes[2]);
+				const fHoy = new Date();
+				fHoy.setHours(0, 0, 0, 0);
+				const dif = Math.round((fEntrega - fHoy) / (1000 * 60 * 60 * 24));
+
+				let textoAlerta = "";
+				if (dif >= 2) textoAlerta = "verde";
+				else if (dif === 1) textoAlerta = "amarillo";
+				else if (dif <= 0) textoAlerta = "rojo";
+
+				porAlerta = textoAlerta.includes(query);
+			}
+		}
+
+		return porNombre || porOrden || porFecha || porAlerta;
 	});
 
-	const vistos = new Set();
+	const vistas = new Set();
 	filtrados.forEach((orden) => {
-		if (vistos.has(orden.ordenNo)) return;
-		vistos.add(orden.ordenNo);
+		if (vistas.has(orden.ordenNo)) return;
+		vistas.add(orden.ordenNo);
 		const card = document.createElement("div");
 		card.className = "search-item-card";
 
-		// Aseguramos que el saldo en el historial de búsqueda muestre los puntos
-		const saldoFormateado = orden.saldoVal.includes(".")
-			? orden.saldoVal
-			: parseFloat(orden.saldoVal.replace(/\D/g, "") || 0).toLocaleString(
-					"es-CO",
-				);
+		const saldoFormateado =
+			orden.saldoVal && orden.saldoVal.includes(".")
+				? orden.saldoVal
+				: parseFloat(
+						(orden.saldoVal || "").replace(/\D/g, "") || 0,
+					).toLocaleString("es-CO");
 
-		card.innerHTML = `<div class="search-item-info"><p>Orden No. ${orden.ordenNo} — <b>${orden.clienteNom}</b></p></div><div class="search-item-status">Saldo: $${saldoFormateado}</div>`;
+		card.innerHTML = `<div class="search-item-info"><p>Orden No. ${orden.ordenNo} — <b>${orden.clienteNom || "Sin Nombre"}</b></p></div><div class="search-item-status">Saldo: $${saldoFormateado}</div>`;
 		card.onclick = () => cargarOrden(orden.id);
 		contenedor.appendChild(card);
 	});
+};
+
+// NUEVA FUNCIÓN GLOBAL: IMPORTAR LA BD DESDE EL ARCHIVO SELECCIONADO EN EL DISCO
+window.importarBackup = (event) => {
+	const archivo = event.target.files[0];
+	if (!archivo) return;
+
+	const lector = new FileReader();
+	lector.onload = function (e) {
+		try {
+			const datosImportados = JSON.parse(e.target.result);
+
+			if (Array.isArray(datosImportados)) {
+				localStorage.setItem(
+					"historial_costura",
+					JSON.stringify(datosImportados),
+				);
+				alert(
+					"¡Base de datos importada con éxito! El historial se ha actualizado en este computador.",
+				);
+				window.location.reload();
+			} else {
+				alert(
+					"Error: El archivo seleccionado no tiene el formato correcto de La Costura.",
+				);
+			}
+		} catch (error) {
+			alert("Error al leer el archivo de copia de seguridad.");
+			console.error(error);
+		}
+	};
+	lector.readAsText(archivo);
 };
 
 // ==========================================================================
@@ -216,7 +270,6 @@ window.buscarOrdenes = () => {
 // ==========================================================================
 
 function vincularCalculos() {
-	// Escucha la escritura en los precios unitarios y les da formato de miles en tiempo real
 	document.querySelectorAll(".c-unit").forEach((input) => {
 		input.oninput = function () {
 			let valorLimpio = this.value.replace(/\D/g, "");
@@ -229,9 +282,17 @@ function vincularCalculos() {
 		};
 	});
 
-	// Vincular cambios automáticos en cantidad y abono
 	document.querySelectorAll(".c-cant, #abono-val").forEach((input) => {
-		input.oninput = recalcular;
+		input.oninput = function () {
+			if (this.id === "abono-val") {
+				let valorLimpio = this.value.replace(/\D/g, "");
+				this.value =
+					valorLimpio !== ""
+						? parseFloat(valorLimpio).toLocaleString("es-CO")
+						: "0";
+			}
+			recalcular();
+		};
 	});
 }
 
@@ -240,19 +301,19 @@ function recalcular() {
 	document.querySelectorAll("#tabla-pedidos tbody tr").forEach((tr) => {
 		const cant = parseFloat(tr.querySelector(".c-cant").value) || 0;
 
-		// Se limpian los puntos del texto para poder multiplicar matemáticamente
 		const unitRaw = tr.querySelector(".c-unit").value || "0";
 		const unit = parseFloat(unitRaw.replace(/\./g, "")) || 0;
 
 		const sub = cant * unit;
 
-		// Se reinyectan los puntos de miles en la casilla de subtotal
 		tr.querySelector(".c-total").value = sub.toLocaleString("es-CO");
 		totalGeneral += sub;
 	});
 
 	const abonoInput = document.getElementById("abono-val");
-	const abono = abonoInput ? parseFloat(abonoInput.value) || 0 : 0;
+	const abono = abonoInput
+		? parseFloat(abonoInput.value.replace(/\./g, "")) || 0
+		: 0;
 
 	const displayTotal = document.getElementById("display-total");
 	const displaySaldo = document.getElementById("display-saldo");
@@ -322,7 +383,7 @@ function guardarOrdenEnHistorial() {
 			prendas.push({
 				cant: tr.querySelector(".c-cant").value,
 				desc,
-				unit: unitRaw.replace(/\./g, ""), // Almacenamiento numérico limpio
+				unit: unitRaw.replace(/\./g, ""),
 				total: totalRaw.replace(/\./g, ""),
 			});
 		}
@@ -393,7 +454,7 @@ function cargarOrden(id) {
 	}
 	vincularCalculos();
 	recalcular();
-	calcularAlertaFecha(); // Dispara dinámicamente el color al consultar una orden guardada
+	calcularAlertaFecha();
 }
 
 document.addEventListener("DOMContentLoaded", () => {
