@@ -1,4 +1,6 @@
-// --- FUNCIONES GLOBALES (Accesibles desde el HTML) ---
+// ==========================================================================
+// 1. FUNCIONES GLOBALES (Accesibles desde el HTML / Ámbito Window)
+// ==========================================================================
 
 window.togglePasswordVisibility = () => {
 	const inputPass = document.getElementById("admin-pass");
@@ -51,7 +53,7 @@ window.agregarFila = () => {
 	if (!tbody) return;
 	const tr = document.createElement("tr");
 
-	// v-unit y c-total ahora son type="text" para permitir la visualización de puntos en vivo
+	// v-unit y c-total operan en formato texto para permitir separadores de miles dinámicos
 	tr.innerHTML = `
         <td>
             <input type="number" class="c-cant" value="1">
@@ -168,11 +170,26 @@ window.buscarOrdenes = () => {
 	if (query === "") return;
 
 	const historial = JSON.parse(localStorage.getItem("historial_costura")) || [];
-	const filtrados = historial.filter(
-		(orden) =>
-			orden.clienteNom.toLowerCase().includes(query) ||
-			orden.ordenNo.toLowerCase().includes(query),
-	);
+
+	// FUNCIONALIDAD AMPLIADA: Buscar por Nombre, No. Orden O Fecha de Entrega
+	const filtrados = historial.filter((orden) => {
+		const porNombre = orden.clienteNom.toLowerCase().includes(query);
+		const porOrden = orden.ordenNo.toLowerCase().includes(query);
+
+		let porFecha = false;
+		if (orden.fechaEntrega) {
+			// Formato original almacenado (AAAA-MM-DD)
+			const fechaOriginal = orden.fechaEntrega.toLowerCase();
+
+			// Reconstrucción a formato latino (DD/MM/AAAA) para permitir búsquedas tradicionales
+			const p = orden.fechaEntrega.split("-");
+			const fechaLatina = `${p[2]}/${p[1]}/${p[0]}`.toLowerCase();
+
+			porFecha = fechaOriginal.includes(query) || fechaLatina.includes(query);
+		}
+
+		return porNombre || porOrden || porFecha;
+	});
 
 	const vistos = new Set();
 	filtrados.forEach((orden) => {
@@ -194,7 +211,9 @@ window.buscarOrdenes = () => {
 	});
 };
 
-// --- LÓGICA INTERNA ---
+// ==========================================================================
+// 2. LÓGICA DE PROCESAMIENTO INTERNO Y CÁLCULOS
+// ==========================================================================
 
 function vincularCalculos() {
 	// Escucha la escritura en los precios unitarios y les da formato de miles en tiempo real
@@ -247,13 +266,15 @@ function recalcular() {
 function calcularAlertaFecha() {
 	const inputFecha = document.getElementById("fecha-entrega");
 	if (!inputFecha || !inputFecha.value) return;
+
 	const partes = inputFecha.value.split("-");
 	const fechaEntrega = new Date(partes[0], partes[1] - 1, partes[2]);
 	const fechaActual = new Date();
 	fechaActual.setHours(0, 0, 0, 0);
+
 	const dif = Math.round((fechaEntrega - fechaActual) / (1000 * 60 * 60 * 24));
 
-	inputFecha.className = "";
+	inputFecha.className = ""; // Limpiar clases anteriores dinámicamente
 	if (dif >= 2) inputFecha.classList.add("alerta-verde");
 	else if (dif === 1) inputFecha.classList.add("alerta-amarillo");
 	else if (dif <= 0) inputFecha.classList.add("alerta-rojo");
@@ -301,7 +322,7 @@ function guardarOrdenEnHistorial() {
 			prendas.push({
 				cant: tr.querySelector(".c-cant").value,
 				desc,
-				unit: unitRaw.replace(/\./g, ""), // Guardamos limpio en almacenamiento
+				unit: unitRaw.replace(/\./g, ""), // Almacenamiento numérico limpio
 				total: totalRaw.replace(/\./g, ""),
 			});
 		}
@@ -346,7 +367,6 @@ function cargarOrden(id) {
 		orden.prendas.forEach((p) => {
 			const tr = document.createElement("tr");
 
-			// Re-formateamos los campos guardados con puntos de miles al renderizarlos en pantalla
 			const unitFormateado = parseFloat(p.unit).toLocaleString("es-CO");
 			const totalFormateado = parseFloat(p.total).toLocaleString("es-CO");
 
@@ -373,7 +393,7 @@ function cargarOrden(id) {
 	}
 	vincularCalculos();
 	recalcular();
-	calcularAlertaFecha();
+	calcularAlertaFecha(); // Dispara dinámicamente el color al consultar una orden guardada
 }
 
 document.addEventListener("DOMContentLoaded", () => {
