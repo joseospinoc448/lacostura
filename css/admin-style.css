@@ -1,3 +1,6 @@
+/* ==========================================================================
+   1. VARIABLES, CONFIGURACIÓN GLOBAL Y CAPA DE VISIBILIDAD
+   ========================================================================== */
 :root {
     --vino: #7a1b4d;
     --gris: #475569;
@@ -10,14 +13,23 @@ body {
     background: #2d1a2d;
 }
 
-/* Manejo de visibilidad con selectores limpios */
+/* Control estricto de visibilidad para elementos interactivos o paneles ocultos */
+.hidden,
 body .hidden, 
 section.hidden,
 #admin-panel.hidden {
+    display: none !important;
+}
+
+/* Capas exclusivas para el flujo de impresión en pantalla */
+.print-only-block, 
+.print-text-cell {
     display: none;
 }
 
-/* INTERFAZ DE LOGEO */
+/* ==========================================================================
+   2. INTERFAZ DE ACCESO (LOGIN)
+   ========================================================================== */
 .login-container {
     display: flex;
     justify-content: center;
@@ -31,6 +43,7 @@ section.hidden,
     border-radius: 15px;
     text-align: center;
     width: 320px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
 }
 
 .password-wrapper {
@@ -67,9 +80,16 @@ section.hidden,
     cursor: pointer;
     font-weight: bold;
     margin-top: 10px;
+    transition: background 0.3s;
 }
 
-/* MAQUETACIÓN DEL PANEL */
+.btn-ingreso:hover {
+    background: #5c143a;
+}
+
+/* ==========================================================================
+   3. ESTRUCTURA GENERAL DEL PANEL DE CONTROL
+   ========================================================================== */
 .admin-panel {
     max-width: 600px;
     margin: 20px auto;
@@ -88,18 +108,22 @@ section.hidden,
 
 .logo-admin {
     width: 140px;
+    display: block;
+    margin: 0 auto;
 }
 
 .slogan {
     font-size: 11px;
     color: var(--vino);
     margin: 5px 0;
+    line-height: 1.3;
 }
 
 .panel-header h1 {
     font-size: 18px;
     color: var(--vino);
     margin: 5px 0;
+    letter-spacing: 0.5px;
 }
 
 .info-text {
@@ -114,6 +138,13 @@ section.hidden,
     margin-top: 5px;
 }
 
+.header-actions {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
 .btn-logout {
     background: var(--gris);
     color: white;
@@ -125,7 +156,9 @@ section.hidden,
     margin-top: 10px;
 }
 
-/* CUADRÍCULA DE DATOS */
+/* ==========================================================================
+   4. FORMULARIO DE CLIENTE (CUADRÍCULA DE DATOS)
+   ========================================================================== */
 .client-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -155,6 +188,7 @@ section.hidden,
     padding: 5px;
     font-size: 13px;
     background: transparent;
+    outline: none;
 }
 
 .client-grid .field .input-important {
@@ -163,7 +197,39 @@ section.hidden,
     font-size: 16px;
 }
 
-/* TABLA DINÁMICA */
+/* ==========================================================================
+   5. COMPORTAMIENTO DINÁMICO DE ALERTAS (FECHAS DE ENTREGA)
+   ========================================================================== */
+.client-grid .field input[type="date"]#fecha-entrega.alerta-verde {
+    background: #4caf50 !important;
+    color: #ffffff !important;
+    border: 1px solid #388e3c;
+    border-radius: 4px;
+    padding: 5px;
+    font-weight: bold;
+}
+
+.client-grid .field input[type="date"]#fecha-entrega.alerta-amarillo {
+    background: #ffeb3b !important;
+    color: #000000 !important;
+    border: 1px solid #fbc02d;
+    border-radius: 4px;
+    padding: 5px;
+    font-weight: bold;
+}
+
+.client-grid .field input[type="date"]#fecha-entrega.alerta-rojo {
+    background: #f44336 !important;
+    color: #ffffff !important;
+    border: 1px solid #d32f2f;
+    border-radius: 4px;
+    padding: 5px;
+    font-weight: bold;
+}
+
+/* ==========================================================================
+   6. TABLA DE CONTROL DE PRENDAS
+   ========================================================================== */
 table {
     width: 100%;
     border-collapse: collapse;
@@ -188,6 +254,7 @@ td input {
     border: 1px solid #ddd;
     padding: 4px;
     box-sizing: border-box;
+    outline: none;
 }
 
 .btn-add {
@@ -202,7 +269,9 @@ td input {
     font-size: 12px;
 }
 
-/* RESUMEN DE SALDOS */
+/* ==========================================================================
+   7. SECCIÓN RESUMEN, COMPROBANTES Y CONTROL LEGAL
+   ========================================================================== */
 .resumen-container {
     border: 2px solid var(--vino);
     border-radius: 8px;
@@ -211,6 +280,7 @@ td input {
     display: flex;
     justify-content: space-around;
     text-align: center;
+    align-items: center;
 }
 
 .resumen-item label {
@@ -224,6 +294,8 @@ td input {
     width: 80px;
     text-align: center;
     border: 1px solid #ccc;
+    padding: 4px;
+    border-radius: 4px;
 }
 
 .resumen-item span {
@@ -242,59 +314,24 @@ td input {
     font-size: 16px;
     font-weight: bold;
     cursor: pointer;
+    transition: background 0.3s;
 }
 
-/* ALERTAS EN PANTALLA */
-.client-grid .field input[type="date"]#fecha-entrega.alerta-verde {
-    background: #4caf50;
-    color: #ffffff;
-    border: 1px solid #388e3c;
-    border-radius: 4px;
-    padding: 5px;
-    font-weight: bold;
-}
-.client-grid .field input[type="date"]#fecha-entrega.alerta-amarillo {
-    background: #ffeb3b;
-    color: #000000;
-    border: 1px solid #fbc02d;
-    border-radius: 4px;
-    padding: 5px;
-    font-weight: bold;
-}
-.client-grid .field input[type="date"]#fecha-entrega.alerta-rojo {
-    background: #f44336;
-    color: #ffffff;
-    border: 1px solid #d32f2f;
-    border-radius: 4px;
-    padding: 5px;
-    font-weight: bold;
+.btn-print:hover {
+    background: #5c143a;
 }
 
-/* BÚSQUEDA HISTÓRICA */
-.search-container { margin-top: 30px; padding-top: 10px; }
-.separator { border: 0; border-top: 2px dashed #ccc; margin-bottom: 20px; }
-.search-container h2 { font-size: 16px; color: var(--vino); margin-bottom: 12px; }
-.search-box input { width: 96%; padding: 10px; border: 1px solid #ccc; border-radius: 6px; font-size: 13px; margin-bottom: 15px; }
-.results-container { max-height: 250px; overflow-y: auto; }
-.search-item-card { background: #fdfdfd; border: 1px solid #e2e8f0; border-radius: 6px; padding: 10px; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; }
-.search-item-info p { margin: 2px 0; font-size: 12px; }
-.search-item-status { text-align: right; font-weight: bold; color: var(--vino); font-size: 13px; }
-
-/* VISIBILIDAD DE IMPRESIÓN INTERNA */
-.print-only-block, .print-text-cell {
-    display: none;
-}
-
-/* PIE DE PÁGINA REQUERIDO */
 .ticket-footer {
     text-align: center;
     margin-top: 15px;
-    font-family: sans-serif;
 }
+
 .separator-line {
     margin: 5px 0;
     letter-spacing: 2px;
+    color: #64748b;
 }
+
 .footer-legal {
     font-size: 11px;
     font-weight: bold;
@@ -303,9 +340,73 @@ td input {
     margin: 5px 0 0 0;
 }
 
-/* ======================================================== */
-/* CONFIGURACIÓN EXCLUSIVA PARA EL TICKET IMPRESO           */
-/* ======================================================== */
+/* ==========================================================================
+   8. MOTOR DE BÚSQUEDA HISTÓRICA EN TIEMPO REAL
+   ========================================================================== */
+.search-container { 
+    margin-top: 30px; 
+    padding-top: 10px; 
+}
+
+.separator { 
+    border: 0; 
+    border-top: 2px dashed #ccc; 
+    margin-bottom: 20px; 
+}
+
+.search-container h2 { 
+    font-size: 16px; 
+    color: var(--vino); 
+    margin-bottom: 12px; 
+}
+
+.search-box input { 
+    width: 100%; 
+    padding: 10px; 
+    border: 1px solid #ccc; 
+    border-radius: 6px; 
+    font-size: 13px; 
+    margin-bottom: 15px; 
+    box-sizing: border-box;
+}
+
+.results-container { 
+    max-height: 250px; 
+    overflow-y: auto; 
+}
+
+.search-item-card { 
+    background: #fdfdfd; 
+    border: 1px solid #e2e8f0; 
+    border-radius: 6px; 
+    padding: 10px; 
+    margin-bottom: 8px; 
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center; 
+    cursor: pointer; 
+    transition: background 0.2s;
+}
+
+.search-item-card:hover {
+    background: #f1f5f9;
+}
+
+.search-item-info p { 
+    margin: 2px 0; 
+    font-size: 12px; 
+}
+
+.search-item-status { 
+    text-align: right; 
+    font-weight: bold; 
+    color: var(--vino); 
+    font-size: 13px; 
+}
+
+/* ==========================================================================
+   9. REGLAS ESPECÍFICAS DE IMPRESIÓN (TIQUETERA / MEDIA CARTA)
+   ========================================================================== */
 @media print {
     @page {
         size: 5.5in 8.5in;
@@ -313,25 +414,27 @@ td input {
     }
 
     body {
-        background: white;
-        color: #000000;
+        background: white !important;
+        color: #000000 !important;
     }
 
-    /* Único uso justificado para forzar la tiquetera física */
+    /* Ocultamiento absoluto de controles y elementos de gestión en pantalla */
     .no-print,
     .search-container,
     #seccion-busqueda,
     .btn-add,
     .btn-logout,
-    table tbody tr td input {
+    .header-actions,
+    table tbody tr td input,
+    .resumen-item input {
         display: none !important;
     }
 
-    /* Mostrar texto formateado dentro de las celdas */
+    /* Forzar visibilidad de datos estáticos renderizados para el cliente */
     .print-text-cell {
         display: block !important;
         font-size: 13px;
-        color: #000000;
+        color: #000000 !important;
         word-break: break-word;
     }
 
@@ -348,7 +451,7 @@ td input {
         display: block !important;
         font-size: 14px;
         margin: 4px 0;
-        color: #000000;
+        color: #000000 !important;
     }
 
     .font-bold-print {
@@ -360,7 +463,7 @@ td input {
         border: 1px solid #000;
         padding: 5px;
         margin-top: 5px;
-        background-color: transparent;
+        background-color: transparent !important;
     }
 
     .resumen-container {
@@ -368,15 +471,16 @@ td input {
     }
 
     .resumen-item span {
-        color: #000000;
+        color: #000000 !important;
     }
 
     .ticket-footer {
-        display: block;
+        display: block !important;
     }
 
+    /* Forzado térmico de colores del sistema operativo */
     * {
-        -webkit-print-color-adjust: exact;
-        print-color-adjust: exact;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
     }
 }
