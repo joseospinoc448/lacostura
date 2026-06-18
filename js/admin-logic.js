@@ -1,4 +1,74 @@
 // ==========================================================================
+// 0. BASE DE DATOS LOCAL DE PRECIOS PARA AUTOCOMPLETADO AUTOMÁTICO
+// ==========================================================================
+const PRECIOS_PROCEDIMIENTOS = {
+	Descaderados: 17000,
+	"Largo corriente": 11000,
+	"Largo original": 14000,
+	"cambio de gafetes": 18000,
+	"reducion total faja": 35000,
+	"reduccion tanga  de baño": 15000,
+	"reducion tall faja costados piernas": 25000,
+	"reducion talla faja costados": 15000,
+	"largo faja con encaje siliconado": 18000,
+	"Largo a  mano": 14000,
+	"costura mas filete": 5000,
+	"costura sencilla": 2000,
+	Collarin: 12000,
+	"bajar dobladillo con sesgo": 12000,
+	Entubar: 14000,
+	"Largo y entubar": 18000,
+	"Tallar lados": 14000,
+	"Tallar tiro ": 14000,
+	"Tallar cintura": 18000,
+	"Cintura y largo": 20000,
+	"Cambio  dos bolsillos": 24000,
+	"Cambio de bolsillo": 12000,
+	"Bajar talla total": 24000,
+	"Tallado de hombros": 14000,
+	"Tallado lado con manga": 15000,
+	"Talllar lados": 14000,
+	"Hombros y lados": 18000,
+	"Largo Total camisas": 11000,
+	"Largo de manga": 11000,
+	"Largo manga con pieza": 14000,
+	"Bajar talla total camisa o blusa": 24000,
+	"Voltear cuello camisa": 10000,
+	"Voltear cuello con refuerzo camisa": 12000,
+};
+
+// Map auxiliar en minúsculas para garantizar búsquedas insensibles a mayúsculas/minúsculas
+const PRECIOS_MINUSCULAS = {};
+Object.keys(PRECIOS_PROCEDIMIENTOS).forEach((key) => {
+	PRECIOS_MINUSCULAS[key.toLowerCase().trim()] = PRECIOS_PROCEDIMIENTOS[key];
+});
+
+// ==========================================================================
+// FUNCION AUXILIAR: POBLAR DATALIST AUTOMÁTICAMENTE DESDE JAVASCRIPT
+// ==========================================================================
+function poblarDatalistProcedimientos() {
+	let datalist = document.getElementById("procedimientos");
+
+	// Si por algún motivo no existe el datalist en el HTML, lo creamos dinámicamente
+	if (!datalist) {
+		datalist = document.createElement("datalist");
+		datalist.id = "procedimientos";
+		document.body.appendChild(datalist);
+	}
+
+	// Limpiamos cualquier opción vieja para evitar duplicados
+	datalist.innerHTML = "";
+
+	// Inyectamos todos los servicios de nuestra base de datos local
+	Object.keys(PRECIOS_PROCEDIMIENTOS).forEach((servicio) => {
+		const option = document.createElement("option");
+		option.value = servicio;
+		datalist.appendChild(option);
+	});
+	console.log("Datalist de procedimientos cargado con éxito.");
+}
+
+// ==========================================================================
 // 1. FUNCIONES GLOBALES (Accesibles desde el HTML / Ámbito Window)
 // ==========================================================================
 
@@ -37,7 +107,7 @@ window.cerrarSesion = () => location.reload();
 window.descargarBackup = () => {
 	const historial = localStorage.getItem("historial_costura");
 	if (!historial) {
-		alert("No hay datos.");
+		alert("No hay datos para respaldar.");
 		return;
 	}
 	const blob = new Blob([historial], { type: "application/json" });
@@ -53,14 +123,14 @@ window.agregarFila = () => {
 	if (!tbody) return;
 	const tr = document.createElement("tr");
 
-	// v-unit y c-total operan en formato texto para permitir separadores de miles dinámicos
+	// Agregamos autocomplete="on" explícitamente para obligar al navegador a desplegar las opciones
 	tr.innerHTML = `
         <td>
             <input type="number" class="c-cant" value="1">
             <span class="print-text-cell p-cant-txt">1</span>
         </td>
         <td>
-            <input type="text" class="c-desc" placeholder="Arreglo...">
+            <input type="text" class="c-desc" list="procedimientos" autocomplete="on" placeholder="Arreglo o prenda...">
             <span class="print-text-cell p-desc-txt"></span>
         </td>
         <td>
@@ -113,7 +183,7 @@ window.generarEImprimir = () => {
 		abonoVal.replace(/\./g, "") || 0,
 	).toLocaleString("es-CO");
 
-	// 3. Mapear y formatear dinámicamente cada celda de la tabla para el spooler de impresión
+	// 3. Mapear y formatear dinámicamente cada celda de la tabla para la impresión física
 	document.querySelectorAll("#tabla-pedidos tbody tr").forEach((tr) => {
 		const cantVal = tr.querySelector(".c-cant").value || "0";
 		const descVal = tr.querySelector(".c-desc").value || "---";
@@ -135,7 +205,7 @@ window.generarEImprimir = () => {
 		setTimeout(() => {
 			window.print();
 
-			// Restablecer el formulario limpiamente
+			// Restablecer el formulario de forma segura
 			const formTicket = document.getElementById("form-ticket");
 			if (formTicket) formTicket.reset();
 
@@ -153,14 +223,14 @@ window.generarEImprimir = () => {
 			if (fEntrega) fEntrega.className = "";
 
 			window.buscarOrdenes();
-			console.log("Proceso completado.");
+			console.log("Proceso completado con éxito.");
 		}, 400);
 	} else {
 		console.error("Error: Verifique el nombre del cliente.");
 	}
 };
 
-// TRIPLE MOTOR DE BÚSQUEDA AJUSTADO A SU HISTORIAL + COLORES DE ALERTA (INDIFERENTE A MAYÚSCULAS)
+// TRIPLE MOTOR DE BÚSQUEDA HISTÓRICA INTEGRADO CON COLORES DE ALERTA
 window.buscarOrdenes = () => {
 	const searchInput = document.getElementById("buscar-cliente");
 	if (!searchInput) return;
@@ -174,7 +244,6 @@ window.buscarOrdenes = () => {
 	const historial = JSON.parse(localStorage.getItem("historial_costura")) || [];
 
 	const filtrados = historial.filter((orden) => {
-		// Blindaje para evitar que falle si faltan datos en la orden
 		const porNombre = orden.clienteNom
 			? orden.clienteNom.toLowerCase().includes(query)
 			: false;
@@ -191,7 +260,6 @@ window.buscarOrdenes = () => {
 			porFecha = fechaOriginal.includes(query) || fechaLatina.includes(query);
 		}
 
-		// FUNCIONALIDAD ADICIONAL CRANEADA: Evaluación del color de alerta en la consulta
 		let porAlerta = false;
 		if (orden.fechaEntrega) {
 			const partes = orden.fechaEntrega.split("-");
@@ -227,13 +295,17 @@ window.buscarOrdenes = () => {
 						(orden.saldoVal || "").replace(/\D/g, "") || 0,
 					).toLocaleString("es-CO");
 
-		card.innerHTML = `<div class="search-item-info"><p>Orden No. ${orden.ordenNo} — <b>${orden.clienteNom || "Sin Nombre"}</b></p></div><div class="search-item-status">Saldo: $${saldoFormateado}</div>`;
+		card.innerHTML = `
+            <div class="search-item-info">
+                <p>Orden No. ${orden.ordenNo} — <b>${orden.clienteNom || "Sin Nombre"}</b></p>
+            </div>
+            <div class="search-item-status">Saldo: $${saldoFormateado}</div>
+        `;
 		card.onclick = () => cargarOrden(orden.id);
 		contenedor.appendChild(card);
 	});
 };
 
-// NUEVA FUNCIÓN GLOBAL: IMPORTAR LA BD DESDE EL ARCHIVO SELECCIONADO EN EL DISCO
 window.importarBackup = (event) => {
 	const archivo = event.target.files[0];
 	if (!archivo) return;
@@ -242,20 +314,17 @@ window.importarBackup = (event) => {
 	lector.onload = function (e) {
 		try {
 			const datosImportados = JSON.parse(e.target.result);
-
 			if (Array.isArray(datosImportados)) {
 				localStorage.setItem(
 					"historial_costura",
 					JSON.stringify(datosImportados),
 				);
 				alert(
-					"¡Base de datos importada con éxito! El historial se ha actualizado en este computador.",
+					"¡Base de datos importada con éxito! El historial se ha actualizado.",
 				);
 				window.location.reload();
 			} else {
-				alert(
-					"Error: El archivo seleccionado no tiene el formato correcto de La Costura.",
-				);
+				alert("Error: El archivo seleccionado no tiene el formato correcto.");
 			}
 		} catch (error) {
 			alert("Error al leer el archivo de copia de seguridad.");
@@ -270,14 +339,29 @@ window.importarBackup = (event) => {
 // ==========================================================================
 
 function vincularCalculos() {
+	// Usamos el evento 'input' combinado con validación de concordancia total para dar una respuesta inmediata
+	document.querySelectorAll(".c-desc").forEach((inputDesc) => {
+		inputDesc.oninput = function () {
+			const fila = this.closest("tr");
+			const inputUnit = fila.querySelector(".c-unit");
+			const valorEscrito = this.value.trim().toLowerCase();
+
+			// Solo asigna el precio si lo que está en la casilla es idéntico a una opción válida (ej. al seleccionarla)
+			if (PRECIOS_MINUSCULAS[valorEscrito] !== undefined) {
+				inputUnit.value =
+					PRECIOS_MINUSCULAS[valorEscrito].toLocaleString("es-CO");
+				recalcular();
+			}
+		};
+	});
+
 	document.querySelectorAll(".c-unit").forEach((input) => {
 		input.oninput = function () {
 			let valorLimpio = this.value.replace(/\D/g, "");
-			if (valorLimpio !== "") {
-				this.value = parseFloat(valorLimpio).toLocaleString("es-CO");
-			} else {
-				this.value = "0";
-			}
+			this.value =
+				valorLimpio !== ""
+					? parseFloat(valorLimpio).toLocaleString("es-CO")
+					: "0";
 			recalcular();
 		};
 	});
@@ -300,12 +384,10 @@ function recalcular() {
 	let totalGeneral = 0;
 	document.querySelectorAll("#tabla-pedidos tbody tr").forEach((tr) => {
 		const cant = parseFloat(tr.querySelector(".c-cant").value) || 0;
-
 		const unitRaw = tr.querySelector(".c-unit").value || "0";
 		const unit = parseFloat(unitRaw.replace(/\./g, "")) || 0;
 
 		const sub = cant * unit;
-
 		tr.querySelector(".c-total").value = sub.toLocaleString("es-CO");
 		totalGeneral += sub;
 	});
@@ -342,11 +424,16 @@ function calcularAlertaFecha() {
 }
 
 function inicializarEventosPanel() {
+	// Forzamos la creación y llenado del datalist antes de renderizar la primera fila
+	poblarDatalistProcedimientos();
+
 	const fechaEntrega = document.getElementById("fecha-entrega");
 	if (fechaEntrega) fechaEntrega.addEventListener("input", calcularAlertaFecha);
+
 	window.agregarFila();
 	window.buscarOrdenes();
 	actualizarConsecutivo();
+
 	const fechaAuto = document.getElementById("fecha-auto");
 	if (fechaAuto && !fechaAuto.value) {
 		fechaAuto.valueAsDate = new Date();
@@ -427,7 +514,6 @@ function cargarOrden(id) {
 		tbody.innerHTML = "";
 		orden.prendas.forEach((p) => {
 			const tr = document.createElement("tr");
-
 			const unitFormateado = parseFloat(p.unit).toLocaleString("es-CO");
 			const totalFormateado = parseFloat(p.total).toLocaleString("es-CO");
 
@@ -437,7 +523,7 @@ function cargarOrden(id) {
                     <span class="print-text-cell p-cant-txt">${p.cant}</span>
                 </td>
                 <td>
-                    <input type="text" class="c-desc" value="${p.desc}">
+                    <input type="text" class="c-desc" list="procedimientos" autocomplete="on" value="${p.desc}">
                     <span class="print-text-cell p-desc-txt">${p.desc}</span>
                 </td>
                 <td>
