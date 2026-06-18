@@ -67,10 +67,10 @@ const PRECIOS_PROCEDIMIENTOS = {
 	"Vesti. 1a comunion con encaje mas lavanderia y planchado": 70000,
 	"Vest. 1a com con pedreria mas lavanderia": 60000,
 	"Tendidos-lavanderia": 46000,
-	"Vestido fiesta-lavanderia": 39000,
-	"vestido en lino-lavanderia": 45000,
-	"Jeans cambios cierre": 14000,
-	"Cambio cierre-cojines": 14000,
+	"Vestido fiesta mas lavanderia": 39000,
+	"vestido en lino mas lavanderia": 45000,
+	"Jeans cambios de cierre": 14000,
+	"Cambio cierre en cojines": 14000,
 };
 
 // Map auxiliar en minúsculas para garantizar búsquedas insensibles a mayúsculas/minúsculas
