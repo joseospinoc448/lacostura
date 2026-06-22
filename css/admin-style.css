@@ -13,12 +13,12 @@ body {
     background: #2d1a2d;
 }
 
-/* Control estricto de visibilidad para elementos interactivos o paneles ocultos */
+/* Control estricto de visibilidad mediante especificidad (sin !important en pantalla) */
 .hidden,
-body .hidden, 
+body .hidden,
 section.hidden,
 #admin-panel.hidden {
-    display: none !important;
+    display: none;
 }
 
 /* Capas exclusivas para el flujo de impresión en pantalla */
@@ -200,9 +200,10 @@ section.hidden,
 /* ==========================================================================
    5. COMPORTAMIENTO DINÁMICO DE ALERTAS (FECHAS DE ENTREGA)
    ========================================================================== */
+/* Se aumentó la especificidad del selector para remover los !important con éxito */
 .client-grid .field input[type="date"]#fecha-entrega.alerta-verde {
-    background: #4caf50 !important;
-    color: #ffffff !important;
+    background: #4caf50;
+    color: #ffffff;
     border: 1px solid #388e3c;
     border-radius: 4px;
     padding: 5px;
@@ -210,8 +211,8 @@ section.hidden,
 }
 
 .client-grid .field input[type="date"]#fecha-entrega.alerta-amarillo {
-    background: #ffeb3b !important;
-    color: #000000 !important;
+    background: #ffeb3b;
+    color: #000000;
     border: 1px solid #fbc02d;
     border-radius: 4px;
     padding: 5px;
@@ -219,8 +220,8 @@ section.hidden,
 }
 
 .client-grid .field input[type="date"]#fecha-entrega.alerta-rojo {
-    background: #f44336 !important;
-    color: #ffffff !important;
+    background: #f44336;
+    color: #ffffff;
     border: 1px solid #d32f2f;
     border-radius: 4px;
     padding: 5px;
@@ -228,7 +229,7 @@ section.hidden,
 }
 
 /* ==========================================================================
-   6. TABLA DE CONTROL DE PRENDAS
+   6. TABLA DE CONTROL DE PRENDAS Y AUTOCOMPLETADO
    ========================================================================== */
 table {
     width: 100%;
@@ -255,6 +256,16 @@ td input {
     padding: 4px;
     box-sizing: border-box;
     outline: none;
+}
+
+td input[list] {
+    cursor: pointer;
+    background-color: #fafbfc;
+}
+
+td input[list]:focus {
+    border-color: var(--vino);
+    background-color: #ffffff;
 }
 
 .btn-add {
@@ -414,11 +425,11 @@ td input {
     }
 
     body {
-        background: white !important;
+        background: white !important; /* Requerido por navegadores para forzar fondo blanco */
         color: #000000 !important;
     }
 
-    /* Ocultamiento absoluto de controles y elementos de gestión en pantalla */
+    /* Ocultamiento absoluto de controles interactivos en la tiquetera física */
     .no-print,
     .search-container,
     #seccion-busqueda,
@@ -426,7 +437,8 @@ td input {
     .btn-logout,
     .header-actions,
     table tbody tr td input,
-    .resumen-item input {
+    .resumen-item input,
+    .entrega-container {
         display: none !important;
     }
 
@@ -478,9 +490,79 @@ td input {
         display: block !important;
     }
 
-    /* Forzado térmico de colores del sistema operativo */
+    /* Ajuste térmico estricto para impresión sin color */
     * {
         -webkit-print-color-adjust: exact !important;
         print-color-adjust: exact !important;
     }
+}
+
+/* ==========================================================================
+   10. NUEVA FUNCIONALIDAD: MÓDULO DE LIQUIDACIÓN Y ENTREGA DE PRENDAS
+   ========================================================================== */
+.entrega-container {
+    margin-top: 25px;
+    border: 2px solid var(--vino);
+    padding: 15px;
+    border-radius: 8px;
+    background-color: #fdfdfd;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.entrega-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    margin-bottom: 12px;
+}
+
+.entrega-field {
+    display: flex;
+    flex-direction: column;
+}
+
+.entrega-field label {
+    font-size: 11px;
+    font-weight: bold;
+    color: var(--vino);
+    margin-bottom: 4px;
+    text-transform: uppercase;
+    text-align: center;
+}
+
+.entrega-field input {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 14px;
+    box-sizing: border-box;
+    text-align: center;
+    outline: none;
+    font-weight: bold;
+}
+
+.entrega-field input[readonly] {
+    background-color: #f1f5f9;
+    color: #334155;
+    border-color: #cbd5e1;
+}
+
+.entrega-field.highlight-vueltas input {
+    background-color: #e2f0d9;
+    border: 2px solid #385723;
+    color: #385723;
+    font-size: 16px;
+}
+
+.entrega-observacion {
+    margin-top: 12px;
+    border-top: 1px dashed #cbd5e1;
+    padding-top: 10px;
+    font-size: 12px;
+    color: #1e293b;
+}
+
+.entrega-observacion strong {
+    color: var(--vino);
 }
