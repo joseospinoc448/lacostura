@@ -16,6 +16,9 @@ const PRECIOS_PROCEDIMIENTOS = {
 	"Encauchado Esquina manta": 25000,
 	"Encauchado Esquina cojín": 15000,
 	"Cambio caucho pantalon": 14000,
+	"Enterizo largo de bota": 12000,
+	"Enterizo largo y entallar": 18000,
+	"Enterizo bajar de talla": 25000,
 	"Camisa lavanderia": 17000,
 	"Cambio caucho falda": 14000,
 	"Cambio caucho short": 12000,
@@ -51,7 +54,6 @@ const PRECIOS_PROCEDIMIENTOS = {
 	"Bajar talla total": 24000,
 	"Tallado de hombros": 14000,
 	"Tallado lado con manga": 15000,
-	"Tallar lados": 14000,
 	"Tallar Hombros y lados": 18000,
 	"Largo Total camisas": 11000,
 	"Largo de manga": 11000,
@@ -73,39 +75,13 @@ const PRECIOS_PROCEDIMIENTOS = {
 	"Cambio cierre en cojines": 14000,
 };
 
-// Map auxiliar en minúsculas para garantizar búsquedas insensibles a mayúsculas/minúsculas
 const PRECIOS_MINUSCULAS = {};
 Object.keys(PRECIOS_PROCEDIMIENTOS).forEach((key) => {
 	PRECIOS_MINUSCULAS[key.toLowerCase().trim()] = PRECIOS_PROCEDIMIENTOS[key];
 });
 
 // ==========================================================================
-// FUNCION AUXILIAR: POBLAR DATALIST AUTOMÁTICAMENTE DESDE JAVASCRIPT
-// ==========================================================================
-function poblarDatalistProcedimientos() {
-	let datalist = document.getElementById("procedimientos");
-
-	// Si por algún motivo no existe el datalist en el HTML, lo creamos dinámicamente
-	if (!datalist) {
-		datalist = document.createElement("datalist");
-		datalist.id = "procedimientos";
-		document.body.appendChild(datalist);
-	}
-
-	// Limpiamos cualquier opción vieja para evitar duplicados
-	datalist.innerHTML = "";
-
-	// Inyectamos todos los servicios de nuestra base de datos local
-	Object.keys(PRECIOS_PROCEDIMIENTOS).forEach((servicio) => {
-		const option = document.createElement("option");
-		option.value = servicio;
-		datalist.appendChild(option);
-	});
-	console.log("Datalist de procedimientos cargado con éxito.");
-}
-
-// ==========================================================================
-// 1. FUNCIONES GLOBALES (Accesibles desde el HTML / Ámbito Window)
+// 1. FUNCIONES GLOBALES (Ámbito Window)
 // ==========================================================================
 
 window.togglePasswordVisibility = () => {
@@ -123,7 +99,7 @@ window.togglePasswordVisibility = () => {
 };
 
 window.verificarAccAccess = () => {
-	/* Alias de respaldo */ window.verificarAcceso();
+	window.verificarAcceso();
 };
 
 window.verificarAcceso = () => {
@@ -159,14 +135,13 @@ window.agregarFila = () => {
 	if (!tbody) return;
 	const tr = document.createElement("tr");
 
-	// Agregamos autocomplete="on" explícitamente para obligar al navegador a desplegar las opciones
 	tr.innerHTML = `
         <td>
             <input type="number" class="c-cant" value="1">
             <span class="print-text-cell p-cant-txt">1</span>
         </td>
         <td>
-            <input type="text" class="c-desc" list="procedimientos" autocomplete="on" placeholder="Arreglo o prenda...">
+            <input type="text" class="c-desc" list="lista-procedimientos" autocomplete="on" placeholder="Arreglo o prenda...">
             <span class="print-text-cell p-desc-txt"></span>
         </td>
         <td>
@@ -185,7 +160,13 @@ window.agregarFila = () => {
 window.generarEImprimir = () => {
 	console.log("Iniciando proceso de mapeo e impresión con puntos de miles...");
 
-	// 1. Mapear datos de cabecera
+	if (!guardarOrdenEnHistorial()) {
+		console.error(
+			"Error: No se pudo guardar la orden. Verifique el nombre del cliente.",
+		);
+		return;
+	}
+
 	const ordenInp = document.getElementById("orden-no");
 	if (ordenInp)
 		document.getElementById("print-orden-txt").innerText = ordenInp.value;
@@ -213,13 +194,11 @@ window.generarEImprimir = () => {
 	document.getElementById("print-cel-txt").innerText =
 		document.getElementById("cliente-cel").value || "---";
 
-	// 2. Formatear abono con puntos en el ticket impreso
 	const abonoVal = document.getElementById("abono-val").value || "0";
 	document.getElementById("print-abono-txt").innerText = parseFloat(
 		abonoVal.replace(/\./g, "") || 0,
 	).toLocaleString("es-CO");
 
-	// 3. Mapear y formatear dinámicamente cada celda de la tabla para la impresión física
 	document.querySelectorAll("#tabla-pedidos tbody tr").forEach((tr) => {
 		const cantVal = tr.querySelector(".c-cant").value || "0";
 		const descVal = tr.querySelector(".c-desc").value || "---";
@@ -237,36 +216,39 @@ window.generarEImprimir = () => {
 			totalVal.toLocaleString("es-CO");
 	});
 
-	if (guardarOrdenEnHistorial()) {
-		setTimeout(() => {
-			window.print();
-
-			// Restablecer el formulario de forma segura
-			const formTicket = document.getElementById("form-ticket");
-			if (formTicket) formTicket.reset();
-
-			const tbody = document.querySelector("#tabla-pedidos tbody");
-			if (tbody) tbody.innerHTML = "";
-
-			window.agregarFila();
-			recalcular();
-			actualizarConsecutivo();
-
-			const fechaAuto = document.getElementById("fecha-auto");
-			if (fechaAuto) fechaAuto.valueAsDate = new Date();
-
-			const fEntrega = document.getElementById("fecha-entrega");
-			if (fEntrega) fEntrega.className = "";
-
-			window.buscarOrdenes();
-			console.log("Proceso completado con éxito.");
-		}, 400);
-	} else {
-		console.error("Error: Verifique el nombre del cliente.");
+	// CORRECCIÓN: Quitamos la clase de color del input antes de imprimir para evitar duplicados visuales
+	if (fechaEntregaInp) {
+		fechaEntregaInp.className = "";
 	}
+
+	setTimeout(() => {
+		window.print();
+
+		const formTicket =
+			document.getElementById("form-ticket") || document.querySelector("form");
+		if (formTicket) formTicket.reset();
+
+		const tbody = document.querySelector("#tabla-pedidos tbody");
+		if (tbody) tbody.innerHTML = "";
+
+		const modEntrega = document.getElementById("modulo-entrega");
+		if (modEntrega) modEntrega.style.display = "none";
+
+		window.agregarFila();
+		recalcular();
+		actualizarConsecutivo();
+
+		const fechaAuto = document.getElementById("fecha-auto");
+		if (fechaAuto) fechaAuto.valueAsDate = new Date();
+
+		// Limpiamos de nuevo cualquier rastro de color tras el reseteo
+		if (fechaEntregaInp) fechaEntregaInp.className = "";
+
+		window.buscarOrdenes();
+		console.log("Proceso completado con éxito.");
+	}, 400);
 };
 
-// TRIPLE MOTOR DE BÚSQUEDA HISTÓRICA INTEGRADO CON COLORES DE ALERTA
 window.buscarOrdenes = () => {
 	const searchInput = document.getElementById("buscar-cliente");
 	if (!searchInput) return;
@@ -355,16 +337,13 @@ window.importarBackup = (event) => {
 					"historial_costura",
 					JSON.stringify(datosImportados),
 				);
-				alert(
-					"¡Base de datos importada con éxito! El historial se ha actualizado.",
-				);
+				alert("¡Base de datos importada con éxito!");
 				window.location.reload();
 			} else {
-				alert("Error: El archivo seleccionado no tiene el formato correcto.");
+				alert("Error: El archivo no tiene el formato correcto.");
 			}
 		} catch (error) {
-			alert("Error al leer el archivo de copia de seguridad.");
-			console.error(error);
+			alert("Error al leer la copia de seguridad.");
 		}
 	};
 	lector.readAsText(archivo);
@@ -375,14 +354,12 @@ window.importarBackup = (event) => {
 // ==========================================================================
 
 function vincularCalculos() {
-	// Usamos el evento 'input' combinado con validación de concordancia total para dar una respuesta inmediata
 	document.querySelectorAll(".c-desc").forEach((inputDesc) => {
 		inputDesc.oninput = function () {
 			const fila = this.closest("tr");
 			const inputUnit = fila.querySelector(".c-unit");
 			const valorEscrito = this.value.trim().toLowerCase();
 
-			// Solo asigna el precio si lo que está en la casilla es idéntico a una opción válida (ej. al seleccionarla)
 			if (PRECIOS_MINUSCULAS[valorEscrito] !== undefined) {
 				inputUnit.value =
 					PRECIOS_MINUSCULAS[valorEscrito].toLocaleString("es-CO");
@@ -436,10 +413,17 @@ function recalcular() {
 	const displayTotal = document.getElementById("display-total");
 	const displaySaldo = document.getElementById("display-saldo");
 
+	const saldoFinal = totalGeneral - abono;
+
 	if (displayTotal)
 		displayTotal.innerText = totalGeneral.toLocaleString("es-CO");
-	if (displaySaldo)
-		displaySaldo.innerText = (totalGeneral - abono).toLocaleString("es-CO");
+	if (displaySaldo) displaySaldo.innerText = saldoFinal.toLocaleString("es-CO");
+
+	const entregaSaldoInput = document.getElementById("entrega-saldo");
+	if (entregaSaldoInput) {
+		entregaSaldoInput.value = saldoFinal.toLocaleString("es-CO");
+		calcularVueltasEntrega();
+	}
 }
 
 function calcularAlertaFecha() {
@@ -453,18 +437,37 @@ function calcularAlertaFecha() {
 
 	const dif = Math.round((fechaEntrega - fechaActual) / (1000 * 60 * 60 * 24));
 
-	inputFecha.className = ""; // Limpiar clases anteriores dinámicamente
+	inputFecha.className = "";
 	if (dif >= 2) inputFecha.classList.add("alerta-verde");
 	else if (dif === 1) inputFecha.classList.add("alerta-amarillo");
 	else if (dif <= 0) inputFecha.classList.add("alerta-rojo");
 }
 
 function inicializarEventosPanel() {
-	// Forzamos la creación y llenado del datalist antes de renderizar la primera fila
-	poblarDatalistProcedimientos();
+	let datalist = document.getElementById("lista-procedimientos");
+	if (datalist) {
+		datalist.innerHTML = "";
+		Object.keys(PRECIOS_PROCEDIMIENTOS).forEach((servicio) => {
+			const option = document.createElement("option");
+			option.value = servicio;
+			datalist.appendChild(option);
+		});
+	}
 
 	const fechaEntrega = document.getElementById("fecha-entrega");
 	if (fechaEntrega) fechaEntrega.addEventListener("input", calcularAlertaFecha);
+
+	const valorDadoInput = document.getElementById("entrega-valor-dado");
+	if (valorDadoInput) {
+		valorDadoInput.oninput = function () {
+			let valorLimpio = this.value.replace(/\D/g, "");
+			this.value =
+				valorLimpio !== ""
+					? parseFloat(valorLimpio).toLocaleString("es-CO")
+					: "";
+			calcularVueltasEntrega();
+		};
+	}
 
 	window.agregarFila();
 	window.buscarOrdenes();
@@ -532,6 +535,7 @@ function guardarOrdenEnHistorial() {
 	return true;
 }
 
+// RESTAURADO COMPLETO: Carga de órdenes sin errores de duplicación en módulos externos
 function cargarOrden(id) {
 	const historial = JSON.parse(localStorage.getItem("historial_costura")) || [];
 	const orden = historial.find((item) => item.id === id);
@@ -559,7 +563,7 @@ function cargarOrden(id) {
                     <span class="print-text-cell p-cant-txt">${p.cant}</span>
                 </td>
                 <td>
-                    <input type="text" class="c-desc" list="procedimientos" autocomplete="on" value="${p.desc}">
+                    <input type="text" class="c-desc" list="lista-procedimientos" autocomplete="on" value="${p.desc}">
                     <span class="print-text-cell p-desc-txt">${p.desc}</span>
                 </td>
                 <td>
@@ -577,6 +581,42 @@ function cargarOrden(id) {
 	vincularCalculos();
 	recalcular();
 	calcularAlertaFecha();
+
+	const modEntrega = document.getElementById("modulo-entrega");
+	if (modEntrega) {
+		modEntrega.style.display = "block";
+		const hoy = new Date();
+		document.getElementById("entrega-fecha").value =
+			`${String(hoy.getDate()).padStart(2, "0")}/${String(hoy.getMonth() + 1).padStart(2, "0")}/${hoy.getFullYear()}`;
+
+		const saldoLimpio =
+			parseFloat((orden.saldoVal || "").replace(/\./g, "")) || 0;
+		document.getElementById("entrega-saldo").value =
+			saldoLimpio.toLocaleString("es-CO");
+
+		document.getElementById("entrega-valor-dado").value = "";
+		document.getElementById("entrega-vueltas").value = "0";
+	}
+}
+
+function calcularVueltasEntrega() {
+	const saldoInput = document.getElementById("entrega-saldo");
+	const valorDadoInput = document.getElementById("entrega-valor-dado");
+	const vueltasInput = document.getElementById("entrega-vueltas");
+
+	if (!saldoInput || !valorDadoInput || !vueltasInput) return;
+
+	const saldo =
+		parseFloat(saldoInput.value.replace(/\./g, "").replace(/,/g, "")) || 0;
+	const valorDado =
+		parseFloat(valorDadoInput.value.replace(/\./g, "").replace(/,/g, "")) || 0;
+
+	if (valorDado >= saldo && saldo > 0) {
+		const vueltas = valorDado - saldo;
+		vueltasInput.value = vueltas.toLocaleString("es-CO");
+	} else {
+		vueltasInput.value = "0";
+	}
 }
 
 document.addEventListener("DOMContentLoaded", () => {
