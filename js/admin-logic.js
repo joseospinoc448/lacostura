@@ -10,6 +10,8 @@ const PRECIOS_PROCEDIMIENTOS = {
 	"Encauchado completo manta": 45000,
 	"Encauchado completo cojín": 25000,
 	"Jeans aplicacion entre piernas": 12000,
+	"Sudadera largo y entallar": 18000,
+	"Sudera largo de bota": 12000,
 	"Aplicacion Jeans compleja": 18000,
 	"Sudadera aplicacion sencilla": 10000,
 	"Encauchaudo cabecero sabana": 19000,
