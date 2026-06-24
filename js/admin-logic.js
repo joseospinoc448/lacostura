@@ -4,6 +4,13 @@
 const PRECIOS_PROCEDIMIENTOS = {
 	Descaderados: 17000,
 	"Armar con cierre en cojines": 17000,
+	"Pantalon costado sencillo": 6000,
+	"Pantalon costado complejo": 10000,
+	"Blusa largo manga y entallar": 14000,
+	"Descaderado sencillo": 15000,
+	"Descaderado complejo": 25000,
+	"Blusa largo de bota": 12000,
+	"Pantalon cambios cierre": 11000,
 	"Bolso cambios de cierre": 19000,
 	"Blusas cambio de cierre": 14000,
 	"Encauchado completo sabana": 21000,
