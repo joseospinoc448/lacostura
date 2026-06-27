@@ -2,15 +2,15 @@
    1. VARIABLES, CONFIGURACIÓN GLOBAL Y CAPA DE VISIBILIDAD
    ========================================================================== */
 :root {
-    --vino: #7a1b4d;
-    --gris: #475569;
-    --bg: #f4f7f6;
+	--vino: #7a1b4d;
+	--gris: #000;
+	--bg: #f4f7f6;
 }
 
 body {
-    font-family: sans-serif;
-    margin: 0;
-    background: #2d1a2d;
+	font-family: sans-serif;
+	margin: 0;
+	background: #2d1a2d;
 }
 
 /* Control estricto de visibilidad mediante especificidad (sin !important en pantalla) */
@@ -18,183 +18,193 @@ body {
 body .hidden,
 section.hidden,
 #admin-panel.hidden {
-    display: none;
+	display: none;
 }
 
 /* Capas exclusivas para el flujo de impresión en pantalla */
-.print-only-block, 
+.print-only-block,
 .print-text-cell {
-    display: none;
+	display: none;
 }
 
 /* ==========================================================================
    2. INTERFAZ DE ACCESO (LOGIN)
    ========================================================================== */
 .login-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	height: 100vh;
 }
 
 .login-box {
-    background: white;
-    padding: 30px;
-    border-radius: 15px;
-    text-align: center;
-    width: 320px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+	background: white;
+	padding: 30px;
+	border-radius: 15px;
+	text-align: center;
+	width: 320px;
+	box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
 }
 
 .password-wrapper {
-    position: relative;
-    width: 90%;
-    margin: 15px auto;
+	position: relative;
+	width: 90%;
+	margin: 15px auto;
 }
 
 .password-wrapper input {
-    width: 100%;
-    padding: 10px;
-    padding-right: 40px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    box-sizing: border-box;
+	width: 100%;
+	padding: 10px;
+	padding-right: 40px;
+	border: 1px solid #ccc;
+	border-radius: 5px;
+	box-sizing: border-box;
 }
 
 .password-wrapper i {
-    position: absolute;
-    right: 10px;
-    top: 50%;
-    transform: translateY(-50%);
-    cursor: pointer;
-    color: var(--gris);
+	position: absolute;
+	right: 10px;
+	top: 50%;
+	transform: translateY(-50%);
+	cursor: pointer;
+	color: var(--gris);
 }
 
 .btn-ingreso {
-    width: 100%;
-    padding: 12px;
-    background: var(--vino);
-    color: white;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    font-weight: bold;
-    margin-top: 10px;
-    transition: background 0.3s;
+	width: 100%;
+	padding: 12px;
+	background: var(--vino);
+	color: white;
+	border: none;
+	border-radius: 8px;
+	cursor: pointer;
+	font-weight: bold;
+	margin-top: 10px;
+	transition: background 0.3s;
 }
 
 .btn-ingreso:hover {
-    background: #5c143a;
+	background: #5c143a;
 }
 
 /* ==========================================================================
    3. ESTRUCTURA GENERAL DEL PANEL DE CONTROL
    ========================================================================== */
 .admin-panel {
-    max-width: 600px;
-    margin: 20px auto;
-    background: white;
-    border-radius: 10px;
-    padding: 15px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+	max-width: 600px;
+	margin: 20px auto;
+	background: white;
+	border-radius: 10px;
+	padding: 15px;
+	box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
 }
 
 .panel-header {
-    text-align: center;
-    border-bottom: 2px solid var(--vino);
-    padding-bottom: 10px;
-    margin-bottom: 15px;
+	text-align: center;
+	border-bottom: 2px solid var(--vino);
+	padding-bottom: 10px;
+	margin-bottom: 15px;
+	margin-top: 20px;
 }
 
 .logo-admin {
-    width: 140px;
-    display: block;
-    margin: 0 auto;
+	width: 200px;
+	display: block;
+	margin: 0 auto;
 }
 
 .slogan {
-    font-size: 11px;
-    color: var(--vino);
-    margin: 5px 0;
-    line-height: 1.3;
+	font-size: 11px;
+	color: var(--vino);
+	margin: 5px 0;
+	line-height: 1.3;
 }
 
-.panel-header h1 {
-    font-size: 18px;
-    color: var(--vino);
-    margin: 5px 0;
-    letter-spacing: 0.5px;
+.panel-header .celular {
+	font-size: 14px;
+	color: #000;
+	margin: 5px 0;
+	font-weight: bold;
+}
+
+.panel-header p {
+	font-size: 12px;
+	color: #000;
+
+	margin: 5px 0;
+	letter-spacing: 0.5px;
 }
 
 .info-text {
-    font-size: 11px;
-    margin: 2px 0;
+	font-size: 11px;
+	margin: 2px 0;
 }
 
 .highlight-text {
-    font-size: 12px;
-    font-weight: bold;
-    color: #1e293b;
-    margin-top: 5px;
+	font-size: 12px;
+	font-weight: bold;
+	color: #1e293b;
+	margin-top: 5px;
 }
 
 .header-actions {
-    display: flex;
-    justify-content: center;
-    gap: 10px;
-    flex-wrap: wrap;
+	display: flex;
+	justify-content: center;
+	gap: 10px;
+	flex-wrap: wrap;
 }
 
 .btn-logout {
-    background: var(--gris);
-    color: white;
-    border: none;
-    padding: 5px 12px;
-    border-radius: 4px;
-    font-size: 12px;
-    cursor: pointer;
-    margin-top: 10px;
+	background: var(--gris);
+	color: white;
+	border: none;
+	padding: 5px 12px;
+	border-radius: 4px;
+	font-size: 12px;
+	cursor: pointer;
+	margin-top: 10px;
 }
 
 /* ==========================================================================
    4. FORMULARIO DE CLIENTE (CUADRÍCULA DE DATOS)
    ========================================================================== */
 .client-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 10px;
-    margin-bottom: 15px;
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	gap: 10px;
+	margin-bottom: 15px;
 }
 
 .field {
-    display: flex;
-    flex-direction: column;
+	display: flex;
+	flex-direction: column;
 }
 
 .field.full-width {
-    grid-column: span 2;
+	grid-column: span 2;
 }
 
 .field label {
-    font-size: 11px;
-    font-weight: bold;
-    color: var(--vino);
-    margin-bottom: 2px;
+	font-size: 11px;
+	font-weight: bold;
+	color: var(--vino);
+	color: #000;
+	margin-bottom: 2px;
 }
 
 .field input {
-    border: none;
-    border-bottom: 1px solid #ccc;
-    padding: 5px;
-    font-size: 13px;
-    background: transparent;
-    outline: none;
+	border: none;
+	border-bottom: 1px solid #1f1e1e;
+	padding: 5px;
+	font-size: 13px;
+	background: transparent;
+	outline: none;
 }
 
 .client-grid .field .input-important {
-    color: #d90429;
-    font-weight: bold;
-    font-size: 16px;
+	color: #d90429;
+	font-weight: bold;
+	font-size: 16px;
 }
 
 /* ==========================================================================
@@ -202,296 +212,367 @@ section.hidden,
    ========================================================================== */
 /* Se aumentó la especificidad del selector para remover los !important con éxito */
 .client-grid .field input[type="date"]#fecha-entrega.alerta-verde {
-    background: #4caf50;
-    color: #ffffff;
-    border: 1px solid #388e3c;
-    border-radius: 4px;
-    padding: 5px;
-    font-weight: bold;
+	background: #4caf50;
+	color: #ffffff;
+	border: 1px solid #388e3c;
+	border-radius: 4px;
+	padding: 5px;
+	font-weight: bold;
 }
 
 .client-grid .field input[type="date"]#fecha-entrega.alerta-amarillo {
-    background: #ffeb3b;
-    color: #000000;
-    border: 1px solid #fbc02d;
-    border-radius: 4px;
-    padding: 5px;
-    font-weight: bold;
+	background: #ffeb3b;
+	color: #000000;
+	border: 1px solid #fbc02d;
+	border-radius: 4px;
+	padding: 5px;
+	font-weight: bold;
 }
 
 .client-grid .field input[type="date"]#fecha-entrega.alerta-rojo {
-    background: #f44336;
-    color: #ffffff;
-    border: 1px solid #d32f2f;
-    border-radius: 4px;
-    padding: 5px;
-    font-weight: bold;
+	background: #f44336;
+	color: #ffffff;
+	border: 1px solid #d32f2f;
+	border-radius: 4px;
+	padding: 5px;
+	font-weight: bold;
 }
 
 /* ==========================================================================
    6. TABLA DE CONTROL DE PRENDAS Y AUTOCOMPLETADO
    ========================================================================== */
 table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 10px;
-    font-size: 12px;
+	width: 100%;
+	border-collapse: collapse;
+	margin-top: 10px;
+	font-size: 12px;
 }
 
 th {
-    background: var(--vino);
-    color: white;
-    padding: 8px;
-    font-size: 11px;
+	background: var(--vino);
+	color: white;
+	padding: 8px;
+	font-size: 11px;
 }
 
 td {
-    border: 1px solid #eee;
-    padding: 5px;
+	border: 1px solid #eee;
+	padding: 5px;
 }
 
 td input {
-    width: 95%;
-    border: 1px solid #ddd;
-    padding: 4px;
-    box-sizing: border-box;
-    outline: none;
+	width: 95%;
+	border: 1px solid #ddd;
+	padding: 4px;
+	box-sizing: border-box;
+	outline: none;
 }
 
 td input[list] {
-    cursor: pointer;
-    background-color: #fafbfc;
+	cursor: pointer;
+	background-color: #fafbfc;
 }
 
 td input[list]:focus {
-    border-color: var(--vino);
-    background-color: #ffffff;
+	border-color: var(--vino);
+	background-color: #ffffff;
 }
 
 .btn-add {
-    margin-top: 10px;
-    background: var(--gris);
-    color: white;
-    border: none;
-    padding: 8px;
-    border-radius: 5px;
-    cursor: pointer;
-    width: 100%;
-    font-size: 12px;
+	margin-top: 10px;
+	background: var(--gris);
+	color: white;
+	border: none;
+	padding: 8px;
+	border-radius: 5px;
+	cursor: pointer;
+	width: 100%;
+	font-size: 12px;
 }
 
 /* ==========================================================================
    7. SECCIÓN RESUMEN, COMPROBANTES Y CONTROL LEGAL
    ========================================================================== */
 .resumen-container {
-    border: 2px solid var(--vino);
-    border-radius: 8px;
-    margin: 15px 0;
-    padding: 10px;
-    display: flex;
-    justify-content: space-around;
-    text-align: center;
-    align-items: center;
+	border: 2px solid var(--vino);
+	border-radius: 8px;
+	margin: 15px 0;
+	padding: 10px;
+	display: flex;
+	justify-content: space-around;
+	text-align: center;
+	align-items: center;
 }
 
 .resumen-item label {
-    display: block;
-    font-size: 11px;
-    font-weight: bold;
-    color: var(--vino);
+	display: block;
+	font-size: 11px;
+	font-weight: bold;
+	color: var(--vino);
 }
 
 .resumen-item input {
-    width: 80px;
-    text-align: center;
-    border: 1px solid #ccc;
-    padding: 4px;
-    border-radius: 4px;
+	width: 80px;
+	text-align: center;
+	border: 1px solid #ccc;
+	padding: 4px;
+	border-radius: 4px;
 }
 
 .resumen-item span {
-    font-size: 18px;
-    font-weight: bold;
-    color: var(--vino);
+	font-size: 18px;
+	font-weight: bold;
+	color: var(--vino);
 }
 
 .btn-print {
-    width: 100%;
-    padding: 18px;
-    background: var(--vino);
-    color: white;
-    border: none;
-    border-radius: 10px;
-    font-size: 16px;
-    font-weight: bold;
-    cursor: pointer;
-    transition: background 0.3s;
+	width: 100%;
+	padding: 18px;
+	background: var(--vino);
+	color: white;
+	border: none;
+	border-radius: 10px;
+	font-size: 16px;
+	font-weight: bold;
+	cursor: pointer;
+	transition: background 0.3s;
 }
 
 .btn-print:hover {
-    background: #5c143a;
+	background: #5c143a;
 }
 
 .ticket-footer {
-    text-align: center;
-    margin-top: 15px;
+	text-align: center;
+	margin-top: 15px;
 }
 
 .separator-line {
-    margin: 5px 0;
-    letter-spacing: 2px;
-    color: #64748b;
+	margin: 5px 0;
+	letter-spacing: 2px;
+	color: #64748b;
 }
 
 .footer-legal {
-    font-size: 11px;
-    font-weight: bold;
-    color: #000;
-    line-height: 1.4;
-    margin: 5px 0 0 0;
+	font-size: 11px;
+	font-weight: bold;
+	color: #000;
+	line-height: 1.4;
+	margin: 5px 0 0 0;
 }
 
 /* ==========================================================================
    8. MOTOR DE BÚSQUEDA HISTÓRICA EN TIEMPO REAL
    ========================================================================== */
-.search-container { 
-    margin-top: 30px; 
-    padding-top: 10px; 
+.search-container {
+	margin-top: 30px;
+	padding-top: 10px;
 }
 
-.separator { 
-    border: 0; 
-    border-top: 2px dashed #ccc; 
-    margin-bottom: 20px; 
+.separator {
+	border: 0;
+	border-top: 2px dashed #ccc;
+	margin-bottom: 20px;
 }
 
-.search-container h2 { 
-    font-size: 16px; 
-    color: var(--vino); 
-    margin-bottom: 12px; 
+.search-container h2 {
+	font-size: 16px;
+	color: var(--vino);
+	margin-bottom: 12px;
 }
 
-.search-box input { 
-    width: 100%; 
-    padding: 10px; 
-    border: 1px solid #ccc; 
-    border-radius: 6px; 
-    font-size: 13px; 
-    margin-bottom: 15px; 
-    box-sizing: border-box;
+.search-box input {
+	width: 100%;
+	padding: 10px;
+	border: 1px solid #ccc;
+	border-radius: 6px;
+	font-size: 13px;
+	margin-bottom: 15px;
+	box-sizing: border-box;
 }
 
-.results-container { 
-    max-height: 250px; 
-    overflow-y: auto; 
+.results-container {
+	max-height: 250px;
+	overflow-y: auto;
 }
 
-.search-item-card { 
-    background: #fdfdfd; 
-    border: 1px solid #e2e8f0; 
-    border-radius: 6px; 
-    padding: 10px; 
-    margin-bottom: 8px; 
-    display: flex; 
-    justify-content: space-between; 
-    align-items: center; 
-    cursor: pointer; 
-    transition: background 0.2s;
+.search-item-card {
+	background: #fdfdfd;
+	border: 1px solid #e2e8f0;
+	border-radius: 6px;
+	padding: 10px;
+	margin-bottom: 8px;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	cursor: pointer;
+	transition: background 0.2s;
 }
 
 .search-item-card:hover {
-    background: #f1f5f9;
+	background: #f1f5f9;
 }
 
-.search-item-info p { 
-    margin: 2px 0; 
-    font-size: 12px; 
+.search-item-info p {
+	margin: 2px 0;
+	font-size: 12px;
 }
 
-.search-item-status { 
-    text-align: right; 
-    font-weight: bold; 
-    color: var(--vino); 
-    font-size: 13px; 
+.search-item-status {
+	text-align: right;
+	font-weight: bold;
+	color: var(--vino);
+	font-size: 13px;
 }
 
 /* ==========================================================================
    9. REGLAS ESPECÍFICAS DE IMPRESIÓN (TIQUETERA / MEDIA CARTA)
    ========================================================================== */
 @media print {
-    @page {
-        size: 5.5in 8.5in;
-        margin: 0.4cm;
-    }
+	@page {
+		size: 5.5in 8.5in;
+		margin: 0.4cm;
+	}
 
-    body {
-        background: white !important; /* Requerido por navegadores para forzar fondo blanco */
-        color: #000000 !important;
-    }
+	body {
+		background: white !important; /* Requerido por navegadores para forzar fondo blanco */
+		color: #000000 !important;
+	}
 
-    /* Ocultamiento absoluto de controles interactivos en la tiquetera física */
-    .no-print,
-    .search-container,
-    #seccion-busqueda,
-    .btn-add,
-    .btn-logout,
-    .header-actions,
-    table tbody tr td input,
-    .resumen-item input {
-        display: none !important;
-    }
+	/* Ocultamiento absoluto de controles interactivos en la tiquetera física */
+	.no-print,
+	.search-container,
+	#seccion-busqueda,
+	.btn-add,
+	.btn-logout,
+	.header-actions,
+	table tbody tr td input,
+	.resumen-item input,
+	.entrega-container {
+		display: none !important;
+	}
 
-    /* Forzar visibilidad de datos estáticos renderizados para el cliente */
-    .print-text-cell {
-        display: block !important;
-        font-size: 13px;
-        color: #000000 !important;
-        word-break: break-word;
-    }
+	/* Forzar visibilidad de datos estáticos renderizados para el cliente */
+	.print-text-cell {
+		display: block !important;
+		font-size: 13px;
+		color: #000000 !important;
+		word-break: break-word;
+	}
 
-    .admin-panel {
-        max-width: 100%;
-        margin: 0;
-        padding: 0;
-        box-shadow: none;
-        border: none;
-        display: block;
-    }
+	.admin-panel {
+		max-width: 100%;
+		margin: 0;
+		padding: 0;
+		box-shadow: none;
+		border: none;
+		display: block;
+	}
 
-    .print-only-block {
-        display: block !important;
-        font-size: 14px;
-        margin: 4px 0;
-        color: #000000 !important;
-    }
+	.print-only-block {
+		display: block !important;
+		font-size: 14px;
+		margin: 4px 0;
+		color: #000000 !important;
+	}
 
-    .font-bold-print {
-        font-weight: bold;
-        font-size: 16px;
-    }
+	.font-bold-print {
+		font-weight: bold;
+		font-size: 16px;
+	}
 
-    .highlighted-print-box {
-        border: 1px solid #000;
-        padding: 5px;
-        margin-top: 5px;
-        background-color: transparent !important;
-    }
+	.highlighted-print-box {
+		border: 1px solid #000;
+		padding: 5px;
+		margin-top: 5px;
+		background-color: transparent !important;
+	}
 
-    .resumen-container {
-        border: 1px solid #000;
-    }
+	.resumen-container {
+		border: 1px solid #000;
+	}
 
-    .resumen-item span {
-        color: #000000 !important;
-    }
+	.resumen-item span {
+		color: #000000 !important;
+	}
 
-    .ticket-footer {
-        display: block !important;
-    }
+	.ticket-footer {
+		display: block !important;
+	}
 
-    /* Ajuste térmico estricto para impresión sin color */
-    * {
-        -webkit-print-color-adjust: exact !important;
-        print-color-adjust: exact !important;
-    }
+	/* Ajuste térmico estricto para impresión sin color */
+	* {
+		-webkit-print-color-adjust: exact !important;
+		print-color-adjust: exact !important;
+	}
+}
+
+/* ==========================================================================
+   10. NUEVA FUNCIONALIDAD: MÓDULO DE LIQUIDACIÓN Y ENTREGA DE PRENDAS
+   ========================================================================== */
+.entrega-container {
+	margin-top: 25px;
+	border: 2px solid var(--vino);
+	padding: 15px;
+	border-radius: 8px;
+	background-color: #fdfdfd;
+	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.entrega-grid {
+	display: grid;
+	grid-template-columns: repeat(4, 1fr);
+	gap: 12px;
+	margin-bottom: 12px;
+}
+
+.entrega-field {
+	display: flex;
+	flex-direction: column;
+}
+
+.entrega-field label {
+	font-size: 11px;
+	font-weight: bold;
+	color: var(--vino);
+	margin-bottom: 4px;
+	text-transform: uppercase;
+	text-align: center;
+}
+
+.entrega-field input {
+	width: 100%;
+	padding: 8px;
+	border: 1px solid #ccc;
+	border-radius: 4px;
+	font-size: 14px;
+	box-sizing: border-box;
+	text-align: center;
+	outline: none;
+	font-weight: bold;
+}
+
+.entrega-field input[readonly] {
+	background-color: #f1f5f9;
+	color: #334155;
+	border-color: #cbd5e1;
+}
+
+.entrega-field.highlight-vueltas input {
+	background-color: #e2f0d9;
+	border: 2px solid #385723;
+	color: #385723;
+	font-size: 16px;
+}
+
+.entrega-observacion {
+	margin-top: 12px;
+	border-top: 1px dashed #cbd5e1;
+	padding-top: 10px;
+	font-size: 12px;
+	color: #1e293b;
+}
+
+.entrega-observacion strong {
+	color: var(--vino);
 }
