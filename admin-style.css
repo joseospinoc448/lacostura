@@ -121,8 +121,9 @@ section.hidden,
 }
 
 .panel-header .celular {
-	font-size: 14px;
+	font-size: 15px;
 	color: #000;
+	 margin: -10px 0 8px 0;
 	font-weight: bold;
 }
 
