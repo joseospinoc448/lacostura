@@ -567,7 +567,7 @@ td input[list]:focus {
 	color: var(--vino);
 }
 
-p strong {
-	font-size: 18px;
+.ticket-footer p strong {
+	font-size: 20px;
 	font-weight: bold;
 }
