@@ -109,7 +109,8 @@ section.hidden,
 .logo-admin {
 	width: 210px;
 	display: block;
-	margin: 0 auto;
+	margin: 10px auto;
+	margin-top: 15px;
 }
 
 .slogan {
@@ -567,7 +568,7 @@ td input[list]:focus {
 	color: var(--vino);
 }
 
-.ticket-footer p strong {
+.footer-legal p strong {
 	font-size: 20px;
 	font-weight: bold;
 }
